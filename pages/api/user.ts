@@ -6,8 +6,7 @@ export default async function user(req: NextApiRequest, res: NextApiResponse) {
   try {
     const session: Session = await getLoginSession(req);
     console.log("session", session);
-    const user =
-      (session && (await findUser((session.token as any).username))) ?? null;
+    const user = (session && (await findUser((session.token as any).username))) ?? null;
 
     res.status(200).json({ user });
   } catch (error) {

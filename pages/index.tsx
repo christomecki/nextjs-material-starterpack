@@ -13,13 +13,10 @@ export default function Home() {
       <ol>
         <li>Click Login and enter a username and password.</li>
         <li>
-          Youll be redirected to Home. Click on Profile, notice how your session
-          is being used through a token stored in a cookie.
+          Youll be redirected to Home. Click on Profile, notice how your session is being used through a token stored in
+          a cookie.
         </li>
-        <li>
-          Click Logout and try to go to Profile again. Youll get redirected to
-          Login.
-        </li>
+        <li>Click Logout and try to go to Profile again. Youll get redirected to Login.</li>
       </ol>
 
       {user && (
