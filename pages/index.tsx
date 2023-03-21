@@ -1,4 +1,4 @@
-import { useUser } from "../lib/hooks";
+import { useUser } from "../lib/useUser";
 import Layout from "../components/layout";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";

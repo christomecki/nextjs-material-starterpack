@@ -1,17 +1,23 @@
 import crypto from "crypto";
-import { v4 as uuidv4 } from "uuid";
 import { database } from "./mongodb";
+import { omit } from "lodash";
 
-type User = {
+export type User = {
   createdAt: number;
   username: string;
   hash: string;
   salt: string;
 };
 
-type UserWithId = User & {
+export type UserWithId = User & {
   _id: string;
 };
+
+export function userDto(user: User) {
+  return omit(user, ["hash", "salt"]);
+}
+
+export type UserDto = ReturnType<typeof userDto>;
 
 const userCollection = database.collection<User>("user");
 
@@ -31,7 +37,7 @@ export async function createUser(username: string, password: string) {
 }
 
 export async function findUser(username: string) {
-  return userCollection.findOne<User>({ username });
+  return userCollection.findOne<UserWithId>({ username });
 }
 
 export function validatePassword(user: UserWithId, inputPassword: string) {

@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import Router from "next/router";
-import { useUser } from "../lib/hooks";
+import { useUser } from "../lib/useUser";
 import Form from "../components/form";
 
 export default function Login() {

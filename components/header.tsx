@@ -1,5 +1,5 @@
 import { AppBar, Button, IconButton, Toolbar, Typography, ButtonProps } from "@mui/material";
-import { useUser } from "../lib/hooks";
+import { useUser } from "../lib/useUser";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 
 export default function Header() {

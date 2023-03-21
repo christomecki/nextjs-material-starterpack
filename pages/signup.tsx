@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import Router from "next/router";
-import { useUser } from "../lib/hooks";
+import { useUser } from "../lib/useUser";
 import Layout from "../components/layout";
 import Form from "../components/form";
 

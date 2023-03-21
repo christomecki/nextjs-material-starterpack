@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Router from "next/router";
 import useSWR from "swr";
+import { UserDto } from "./user";
 
 const fetcher = (url: string) =>
   fetch(url)
@@ -32,5 +33,5 @@ export function useUser({ redirectTo, redirectIfFound }: UseUserProps = {}) {
     }
   }, [redirectTo, redirectIfFound, finished, hasUser]);
 
-  return error ? null : user;
+  return error ? null : (user as UserDto);
 }

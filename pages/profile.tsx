@@ -1,11 +1,11 @@
-import { useUser } from "../lib/hooks";
+import { useUser } from "../lib/useUser";
 import Layout from "../components/layout";
 
 export default function Profile() {
   const user = useUser({ redirectTo: "/login" });
 
   return (
-    <Layout>
+    <>
       <h1>Profile</h1>
       {user && (
         <>
@@ -20,6 +20,6 @@ export default function Profile() {
           word-wrap: break-word;
         }
       `}</style>
-    </Layout>
+    </>
   );
 }
