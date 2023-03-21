@@ -1,26 +1,24 @@
-import Head from "next/head";
+import { Container } from "@mui/system";
+import Footer, { FOOTER_HEIGHT } from "./footer";
 import Header from "./header";
+import Box from "@mui/material/Box";
 
 export default function Layout({ children }: React.PropsWithChildren<{}>) {
   return (
     <>
-      <Head>
-        <title>With Cookies</title>
-      </Head>
-
-      <Header />
-
-      <main>
-        <div className="container">{children}</div>
-      </main>
-
-      <style jsx global>{`
-        .container {
-          max-width: 42rem;
-          margin: 0 auto;
-          padding: 2rem 1.25rem;
-        }
-      `}</style>
+      <Box sx={{ minHeight: `calc(100vh - ${FOOTER_HEIGHT}px)` }}>
+        <header>
+          <Header />
+        </header>
+        <main>
+          <Container sx={{ backgroundColor: "rgba(0, 0, 0, 0.01)", position: "relative", padding: 2 }}>
+            {children}
+          </Container>
+        </main>
+      </Box>
+      <footer>
+        <Footer />
+      </footer>
     </>
   );
 }

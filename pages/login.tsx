@@ -1,7 +1,6 @@
 import { FormEvent, useState } from "react";
 import Router from "next/router";
 import { useUser } from "../lib/hooks";
-import Layout from "../components/layout";
 import Form from "../components/form";
 
 export default function Login() {
@@ -37,7 +36,7 @@ export default function Login() {
   }
 
   return (
-    <Layout>
+    <>
       <div className="login">
         <Form isLogin errorMessage={errorMsg} onSubmit={handleSubmit} />
       </div>
@@ -50,6 +49,6 @@ export default function Login() {
           border-radius: 4px;
         }
       `}</style>
-    </Layout>
+    </>
   );
 }
