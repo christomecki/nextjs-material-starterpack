@@ -1,65 +1,30 @@
-import Link from "next/link";
+import { AppBar, Button, IconButton, Toolbar, Typography, ButtonProps } from "@mui/material";
 import { useUser } from "../lib/hooks";
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 
 export default function Header() {
   const user = useUser();
 
   return (
-    <header>
-      <nav>
-        <ul>
-          <li>
-            <Link href="/" legacyBehavior>
-              <a>Home</a>
-            </Link>
-          </li>
-          {user ? (
-            <>
-              <li>
-                <Link href="/profile" legacyBehavior>
-                  <a>Profile</a>
-                </Link>
-              </li>
-              <li>
-                <a href="/api/logout">Logout</a>
-              </li>
-            </>
-          ) : (
-            <li>
-              <Link href="/login" legacyBehavior>
-                <a>Login</a>
-              </Link>
-            </li>
-          )}
-        </ul>
-      </nav>
-      <style jsx>{`
-        nav {
-          max-width: 42rem;
-          margin: 0 auto;
-          padding: 0.2rem 1.25rem;
-        }
-        ul {
-          display: flex;
-          list-style: none;
-          margin-left: 0;
-          padding-left: 0;
-        }
-        li {
-          margin-right: 1rem;
-        }
-        li:first-child {
-          margin-left: auto;
-        }
-        a {
-          color: #fff;
-          text-decoration: none;
-        }
-        header {
-          color: #fff;
-          background-color: #333;
-        }
-      `}</style>
-    </header>
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton size="large" edge="start" color="inherit" aria-label="menu" href="/">
+          <TextSnippetIcon />
+        </IconButton>
+        <Typography sx={{ flexGrow: 1 }}>asd</Typography>
+        {user ? (
+          <>
+            <HeaderButton href="/profile">Profile</HeaderButton>
+            <HeaderButton href="/api/logout">Logout</HeaderButton>
+          </>
+        ) : (
+          <HeaderButton href="/login">Login</HeaderButton>
+        )}
+      </Toolbar>
+    </AppBar>
   );
+}
+
+function HeaderButton(props: ButtonProps) {
+  return <Button variant="contained" color="primary" sx={{ boxShadow: "none" }} {...props} />;
 }

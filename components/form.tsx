@@ -1,3 +1,5 @@
+import { Button, TextField } from "@mui/material";
+import { Stack } from "@mui/system";
 import Link from "next/link";
 import { FormEvent } from "react";
 
@@ -10,38 +12,34 @@ type Props = {
 export default function Form({ isLogin, errorMessage, onSubmit }: Props) {
   return (
     <form onSubmit={onSubmit}>
-      <label>
-        <span>Username</span>
-        <input type="text" name="username" required />
-      </label>
-      <label>
-        <span>Password</span>
-        <input type="password" name="password" required />
-      </label>
-      {!isLogin && (
-        <label>
-          <span>Repeat password</span>
-          <input type="password" name="rpassword" required />
-        </label>
-      )}
+      <Stack spacing={2}>
+        <TextField label="Username" variant="outlined" type="text" name="username" required />
+        <TextField label="Password" variant="outlined" type="password" name="password" required />
 
-      <div className="submit">
-        {isLogin ? (
-          <>
-            <Link href="/signup" legacyBehavior>
-              <a>I dont have an account</a>
-            </Link>
-            <button type="submit">Login</button>
-          </>
-        ) : (
-          <>
-            <Link href="/login" legacyBehavior>
-              <a>I already have an account</a>
-            </Link>
-            <button type="submit">Signup</button>
-          </>
-        )}
-      </div>
+        {!isLogin && <TextField label="Repeat password" variant="outlined" type="password" name="rpassword" required />}
+
+        <div className="submit">
+          {isLogin ? (
+            <>
+              <Link href="/signup" legacyBehavior>
+                <a>I dont have an account</a>
+              </Link>
+              <Button type="submit" variant="contained" color="primary">
+                Login
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" legacyBehavior>
+                <a>I already have an account</a>
+              </Link>
+              <Button type="submit" variant="contained" color="primary">
+                Signup
+              </Button>
+            </>
+          )}
+        </div>
+      </Stack>
 
       {errorMessage && <p className="error">{errorMessage}</p>}
 

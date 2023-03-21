@@ -1,10 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createUser } from "../../lib/user";
 
-export default async function signup(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function signup(req: NextApiRequest, res: NextApiResponse) {
   const returnError = (error: any) => {
     console.error(error);
     res.status(500).end(error.message);
