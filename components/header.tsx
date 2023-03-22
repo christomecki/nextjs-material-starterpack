@@ -1,10 +1,8 @@
 import { AppBar, Button, IconButton, Toolbar, Typography, ButtonProps } from "@mui/material";
-import { useUser } from "../lib/useUser";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
+import { UserDto } from "@/lib/user";
 
-export default function Header() {
-  const user = useUser();
-
+export default function Header({ user }: { user: UserDto | undefined | null }) {
   return (
     <AppBar position="static">
       <Toolbar>

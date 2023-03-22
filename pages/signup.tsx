@@ -1,12 +1,11 @@
 import { FormEvent, useState } from "react";
 import Router from "next/router";
-import { useUser } from "../lib/useUser";
 import Layout from "../components/layout";
 import Form from "../components/form";
+import { GetServerSideProps } from "next";
+import { getUserFromSession } from "@/lib/user";
 
 export default function Signup() {
-  useUser({ redirectTo: "/", redirectIfFound: true });
-
   const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -42,7 +41,7 @@ export default function Signup() {
   }
 
   return (
-    <Layout>
+    <>
       <div className="login">
         <Form isLogin={false} errorMessage={errorMsg} onSubmit={handleSubmit} />
       </div>
@@ -55,6 +54,22 @@ export default function Signup() {
           border-radius: 4px;
         }
       `}</style>
-    </Layout>
+    </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const user = await getUserFromSession(req);
+  if (user) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

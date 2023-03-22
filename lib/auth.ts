@@ -1,7 +1,7 @@
 import Iron from "@hapi/iron";
 import { NextApiRequest, NextApiResponse } from "next";
 import { MAX_AGE, setTokenCookie, getTokenCookie } from "./auth-cookies";
-
+import { RequestWithCookies } from "./types";
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
 export type Session = {
@@ -21,7 +21,7 @@ export async function setLoginSession(res: NextApiResponse, session: Session) {
   setTokenCookie(res, token);
 }
 
-export async function getLoginSession(req: NextApiRequest) {
+export async function getLoginSession(req: RequestWithCookies) {
   const token = getTokenCookie(req);
 
   if (TOKEN_SECRET == null) {

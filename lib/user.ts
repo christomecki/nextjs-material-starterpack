@@ -1,6 +1,9 @@
 import crypto from "crypto";
 import { database } from "./mongodb";
 import { omit } from "lodash";
+import { GetServerSideProps, NextApiRequest } from "next";
+import { Session, getLoginSession } from "./auth";
+import { RequestWithCookies } from "./types";
 
 export type User = {
   createdAt: number;
@@ -14,7 +17,7 @@ export type UserWithId = User & {
 };
 
 export function userDto(user: User) {
-  return omit(user, ["hash", "salt"]);
+  return omit(user, ["hash", "salt", "_id"]) as Omit<User, "hash" | "salt" | "_id">;
 }
 
 export type UserDto = ReturnType<typeof userDto>;
@@ -44,4 +47,17 @@ export function validatePassword(user: UserWithId, inputPassword: string) {
   const inputHash = crypto.pbkdf2Sync(inputPassword, user.salt, 1000, 64, "sha512").toString("hex");
   const passwordsMatch = user.hash === inputHash;
   return passwordsMatch;
+}
+
+export async function getUserFromSession(req: RequestWithCookies) {
+  try {
+    const session: Session = await getLoginSession(req);
+    const user = (session && (await findUser((session.token as any).username))) ?? null;
+    if (user == null) {
+      return undefined;
+    }
+    return userDto(user);
+  } catch (error) {
+    return undefined;
+  }
 }

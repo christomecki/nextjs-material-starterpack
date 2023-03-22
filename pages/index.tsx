@@ -1,15 +1,16 @@
-import { useUser } from "../lib/useUser";
-import Layout from "../components/layout";
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Link from "../src/Link";
 import ProTip from "../src/ProTip";
 import Copyright from "../src/Copyright";
+import { GetServerSideProps } from "next";
+import { getUserFromSession, UserDto } from "@/lib/user";
 
-export default function Home() {
-  const user = useUser();
+type Props = {
+  user: UserDto | null;
+};
 
+export default function Home({ user }: Props) {
   return (
     <>
       <Box
@@ -63,3 +64,10 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req }) => {
+  const user = await getUserFromSession(req);
+  return {
+    props: { user: user ?? null },
+  };
+};
