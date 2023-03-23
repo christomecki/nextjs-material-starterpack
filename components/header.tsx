@@ -1,6 +1,6 @@
 import { AppBar, Button, IconButton, Toolbar, Typography, ButtonProps } from "@mui/material";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
-import { UserDto } from "@/lib/user";
+import { UserDto } from "@/lib/auth/user";
 
 export default function Header({ user }: { user: UserDto | undefined | null }) {
   return (

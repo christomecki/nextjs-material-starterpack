@@ -1,7 +1,6 @@
 import crypto from "crypto";
-import { database } from "./mongodb";
+import { database } from "../mongodb";
 import { omit } from "lodash";
-import { GetServerSideProps, NextApiRequest } from "next";
 import { Session, getLoginSession } from "./auth";
 import { RequestWithCookies } from "./types";
 

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { createUser } from "../../lib/user";
+import { createUser } from "@/lib/auth/user";
 
 export default async function signup(req: NextApiRequest, res: NextApiResponse) {
   const returnError = (error: any) => {

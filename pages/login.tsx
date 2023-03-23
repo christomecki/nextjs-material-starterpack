@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import Router from "next/router";
 import Form from "../components/form";
 import { GetServerSideProps } from "next";
-import { getUserFromSession } from "@/lib/user";
+import { getUserFromSession } from "@/lib/auth/user";
 
 export default function Login() {
   const [errorMsg, setErrorMsg] = useState("");

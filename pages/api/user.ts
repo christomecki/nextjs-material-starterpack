@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getUserFromSession } from "../../lib/user";
+import { getUserFromSession } from "@/lib/auth/user";
 
 export default async function user(req: NextApiRequest, res: NextApiResponse) {
   const user = await getUserFromSession(req);

@@ -1,13 +1,11 @@
 import { FormEvent, useState } from "react";
 import Router from "next/router";
-import Layout from "../components/layout";
 import Form from "../components/form";
 import { GetServerSideProps } from "next";
-import { getUserFromSession } from "@/lib/user";
+import { getUserFromSession } from "@/lib/auth/user";
 
 export default function Signup() {
   const [errorMsg, setErrorMsg] = useState("");
-
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 

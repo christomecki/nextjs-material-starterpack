@@ -1,10 +1,9 @@
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Link from "../src/Link";
-import ProTip from "../src/ProTip";
-import Copyright from "../src/Copyright";
 import { GetServerSideProps } from "next";
-import { getUserFromSession, UserDto } from "@/lib/user";
+import { getUserFromSession, UserDto } from "@/lib/auth/user";
+import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
 
 type Props = {
   user: UserDto | null;
@@ -28,8 +27,7 @@ export default function Home({ user }: Props) {
         <Link href="/about" color="secondary">
           Go to the about page
         </Link>
-        <ProTip />
-        <Copyright />
+        <Button onClick={() => alert("hello")}>Click</Button>
       </Box>
 
       <h1>Passport.js Example</h1>

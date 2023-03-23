@@ -1,6 +1,6 @@
 import { Button, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
-import Link from "next/link";
+import Link from "@mui/material/Link";
 import { FormEvent } from "react";
 
 type Props = {
@@ -21,18 +21,14 @@ export default function Form({ isLogin, errorMessage, onSubmit }: Props) {
         <div className="submit">
           {isLogin ? (
             <>
-              <Link href="/signup" legacyBehavior>
-                <a>I dont have an account</a>
-              </Link>
+              <Link href="/signup">I dont have an account</Link>
               <Button type="submit" variant="contained" color="primary">
                 Login
               </Button>
             </>
           ) : (
             <>
-              <Link href="/login" legacyBehavior>
-                <a>I already have an account</a>
-              </Link>
+              <Link href="/login">I already have an account</Link>
               <Button type="submit" variant="contained" color="primary">
                 Signup
               </Button>

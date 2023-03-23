@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { getUserFromSession, UserDto } from "@/lib/user";
+import { getUserFromSession, UserDto } from "@/lib/auth/user";
 
 type Props = {
   user: UserDto;

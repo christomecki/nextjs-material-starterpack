@@ -1,17 +1,13 @@
 import passport from "passport";
 import nextConnect from "next-connect";
-import { localStrategy } from "../../lib/password-local";
-import { setLoginSession } from "../../lib/auth";
+import { localStrategy } from "@/lib/auth/password-local";
+import { setLoginSession } from "@/lib/auth/auth";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Session } from "../../lib/auth";
+import { Session } from "@/lib/auth/auth";
 
-const authenticate = (
-  method: string,
-  req: NextApiRequest,
-  res: NextApiResponse
-): Promise<string> =>
+const authenticate = (method: string, req: NextApiRequest, res: NextApiResponse): Promise<string> =>
   new Promise((resolve, reject) => {
-    passport.authenticate(method, { session: false }, (error, token) => {
+    passport.authenticate(method, { session: false }, (error: any, token: Express.User) => {
       if (error) {
         reject(error as any);
       } else {
