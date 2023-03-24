@@ -4,9 +4,9 @@ import { createTheme } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
 
 import NextLink from "next/link";
-import { LinkProps } from "@mui/material/Link";
+import { LinkProps as MuiLinkProps } from "@mui/material/Link";
 
-const LinkBehavior = forwardRef<HTMLAnchorElement, LinkProps>(function MuiNextLink(props, ref) {
+const LinkBehavior = forwardRef(function MuiNextLink(props, ref) {
   return <NextLink ref={ref} {...(props as any)} />;
 });
 
@@ -16,10 +16,6 @@ export const roboto = Roboto({
   display: "swap",
   fallback: ["Helvetica", "Arial", "sans-serif"],
 });
-
-const linkDefaultProps = {
-  component: LinkBehavior,
-} as Partial<LinkProps<"a", object>>;
 
 // Create a theme instance.
 const theme = createTheme({
@@ -39,7 +35,9 @@ const theme = createTheme({
   },
   components: {
     MuiLink: {
-      defaultProps: linkDefaultProps,
+      defaultProps: {
+        component: LinkBehavior,
+      } as MuiLinkProps, //LinkProps missing component prop, workaround: https://github.com/mui/material-ui/issues/29942
     },
     MuiButtonBase: {
       defaultProps: {
