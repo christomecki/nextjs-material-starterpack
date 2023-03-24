@@ -1,8 +1,8 @@
 import { forwardRef } from 'react';
 import { Roboto } from '@next/font/google';
-import { createTheme } from '@mui/material/styles';
+import { createTheme, PaletteOptions, ThemeOptions } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
-
+import { merge } from 'lodash';
 import NextLink from 'next/link';
 import { LinkProps as MuiLinkProps } from '@mui/material/Link';
 
@@ -17,20 +17,20 @@ export const roboto = Roboto({
   fallback: ['Helvetica', 'Arial', 'sans-serif'],
 });
 
-// Create a theme instance.
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#556cd6',
-    },
-    secondary: {
-      main: '#19857b',
-    },
-    error: {
-      main: red.A400,
-    },
+export const palette = {
+  primary: {
+    main: '#556cd6',
   },
+  secondary: {
+    main: '#19857b',
+  },
+  error: {
+    main: red.A400,
+  },
+};
+
+const themeOptions: ThemeOptions = {
+  palette,
   typography: {
     fontFamily: roboto.style.fontFamily,
   },
@@ -46,6 +46,19 @@ const theme = createTheme({
       },
     },
   },
-});
+};
 
-export default theme;
+const darkThemeOptions: ThemeOptions = {
+  palette: {
+    mode: 'dark',
+  },
+};
+
+const lightThemeOptions: ThemeOptions = {
+  palette: {
+    mode: 'light',
+  },
+};
+
+export const darkTheme = createTheme(merge(themeOptions, darkThemeOptions));
+export const lightTheme = createTheme(merge(themeOptions, lightThemeOptions));
