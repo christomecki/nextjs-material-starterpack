@@ -1,8 +1,13 @@
-import { AppBar, Button, IconButton, Toolbar, Typography, ButtonProps } from "@mui/material";
-import TextSnippetIcon from "@mui/icons-material/TextSnippet";
-import { UserDto } from "@/lib/auth/user";
+import { AppBar, Button, IconButton, Toolbar, Typography, ButtonProps } from '@mui/material';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import DarkMode from '@mui/icons-material/DarkMode';
+import LightMode from '@mui/icons-material/LightMode';
+import { UserDto } from '@/lib/auth/user';
+import { useCurrentTheme } from '@/lib/material/CurrentThemeProvider';
 
 export default function Header({ user }: { user: UserDto | undefined | null }) {
+  const currentTheme = useCurrentTheme();
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -10,6 +15,15 @@ export default function Header({ user }: { user: UserDto | undefined | null }) {
           <TextSnippetIcon />
         </IconButton>
         <Typography sx={{ flexGrow: 1 }}>asd</Typography>
+        <IconButton
+          size="medium"
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={() => currentTheme.setTheme(currentTheme.theme === 'light' ? 'dark' : 'light')}
+        >
+          {currentTheme.theme === 'dark' ? <DarkMode /> : <LightMode />}
+        </IconButton>
         {user ? (
           <>
             <HeaderButton href="/profile">Profile</HeaderButton>
@@ -24,5 +38,5 @@ export default function Header({ user }: { user: UserDto | undefined | null }) {
 }
 
 function HeaderButton(props: ButtonProps) {
-  return <Button variant="contained" color="primary" sx={{ boxShadow: "none" }} {...props} />;
+  return <Button variant="contained" color="primary" sx={{ boxShadow: 'none' }} {...props} />;
 }
