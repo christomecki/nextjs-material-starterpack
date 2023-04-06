@@ -1,20 +1,29 @@
-import Iron from "@hapi/iron";
-import { NextApiRequest, NextApiResponse } from "next";
-import { MAX_AGE, setTokenCookie, getTokenCookie } from "./auth-cookies";
-import { RequestWithCookies } from "./types";
+import Iron from '@hapi/iron';
+import { NextApiResponse } from 'next';
+import { MAX_AGE, setTokenCookie, getTokenCookie } from './auth-cookies';
+import { RequestWithCookies } from './types';
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
-export type Session = {
-  token: string;
+export type SessionData = {
+  userId: string;
 };
 
-export async function setLoginSession(res: NextApiResponse, session: Session) {
+export type Session = SessionData & {
+  createdAt: number;
+  maxAge: number;
+};
+
+export function isSession(session: any): session is Session {
+  return typeof session === 'object' && typeof session.createdAt === 'number' && typeof session.maxAge === 'number' && typeof session.userId === 'string';
+}
+
+export async function setLoginSession(res: NextApiResponse, session: SessionData) {
   if (TOKEN_SECRET == null) {
-    console.error("TOKEN_SECRET is undefiend");
+    console.error('TOKEN_SECRET is undefiend');
     return;
   }
   const createdAt = Date.now();
-  // Create a session object with a max age that we can validate later
+
   const obj = { ...session, createdAt, maxAge: MAX_AGE };
   const token = await Iron.seal(obj, TOKEN_SECRET, Iron.defaults);
 
@@ -25,17 +34,20 @@ export async function getLoginSession(req: RequestWithCookies) {
   const token = getTokenCookie(req);
 
   if (TOKEN_SECRET == null) {
-    console.error("TOKEN_SECRET is undefiend");
-    return;
+    throw new Error('TOKEN_SECRET is undefiend');
   }
-  if (!token) return;
+  if (!token) {
+    throw new Error('Session not found');
+  }
 
   const session = await Iron.unseal(token, TOKEN_SECRET, Iron.defaults);
+  if (!isSession(session)) {
+    throw new Error('Session is invalid');
+  }
   const expiresAt = session.createdAt + session.maxAge * 1000;
 
-  // Validate the expiration date of the session
   if (Date.now() > expiresAt) {
-    throw new Error("Session expired");
+    throw new Error('Session expired');
   }
 
   return session;

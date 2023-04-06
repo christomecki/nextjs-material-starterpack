@@ -1,17 +1,17 @@
-import passport from "passport";
-import nextConnect from "next-connect";
-import { localStrategy } from "@/lib/auth/password-local";
-import { setLoginSession } from "@/lib/auth/auth";
-import { NextApiRequest, NextApiResponse } from "next";
-import { Session } from "@/lib/auth/auth";
+import passport from 'passport';
+import nextConnect from 'next-connect';
+import { localStrategy } from '@/lib/auth/password-local';
+import { SessionData, setLoginSession } from '@/lib/auth/auth';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { UserWithId } from '@/lib/auth/user';
 
-const authenticate = (method: string, req: NextApiRequest, res: NextApiResponse): Promise<string> =>
+const authenticate = (method: string, req: NextApiRequest, res: NextApiResponse): Promise<UserWithId> =>
   new Promise((resolve, reject) => {
-    passport.authenticate(method, { session: false }, (error: any, token: Express.User) => {
+    passport.authenticate(method, { session: false }, (error: any, user: UserWithId) => {
       if (error) {
         reject(error as any);
       } else {
-        resolve(token as string);
+        resolve(user);
       }
     })(req, res);
   });
@@ -22,11 +22,10 @@ export default nextConnect<NextApiRequest, NextApiResponse>()
   .use(passport.initialize())
   .post(async (req, res) => {
     try {
-      const token = await authenticate("local", req, res);
-      console.log("token");
+      const user = await authenticate('local', req, res);
       // session is the payload to save in the token, it may contain basic info about the user
-      const session: Session = {
-        token,
+      const session: SessionData = {
+        userId: String(user._id),
       };
 
       await setLoginSession(res, session);
