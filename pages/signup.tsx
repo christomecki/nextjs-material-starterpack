@@ -1,18 +1,20 @@
-import { FormEvent, useState } from "react";
-import Router from "next/router";
-import Form from "../components/form";
-import { GetServerSideProps } from "next";
-import { getUserFromSession } from "@/lib/auth/user";
+import { FormEvent, useState } from 'react';
+import Router from 'next/router';
+import { GetServerSideProps } from 'next';
+import { getUserFromSession } from '@/lib/auth/user';
+import { Alert, Box, Button, CircularProgress, Container, Link, Stack, TextField } from '@mui/material';
 
 export default function Signup() {
-  const [errorMsg, setErrorMsg] = useState("");
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (errorMsg) setErrorMsg("");
+    if (errorMsg) setErrorMsg('');
 
     const body = {
-      username: e.currentTarget.username.value,
+      email: e.currentTarget.email.value,
       password: e.currentTarget.password.value,
     };
 
@@ -22,37 +24,47 @@ export default function Signup() {
     }
 
     try {
-      const res = await fetch("/api/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      setIsLoading(true);
+      const res = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
       if (res.status === 200) {
-        Router.push("/login");
+        Router.push('/login');
       } else {
         throw new Error(await res.text());
       }
     } catch (error: any) {
-      console.error("An unexpected error happened occurred:", error);
+      console.error('An unexpected error happened occurred:', error);
       setErrorMsg(error.message);
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <>
-      <div className="login">
-        <Form isLogin={false} errorMessage={errorMsg} onSubmit={handleSubmit} />
-      </div>
-      <style jsx>{`
-        .login {
-          max-width: 21rem;
-          margin: 0 auto;
-          padding: 1rem;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-      `}</style>
-    </>
+    <Container maxWidth="sm">
+      <form onSubmit={onSubmit}>
+        <Stack spacing={2}>
+          <TextField label="Email address" variant="outlined" type="text" name="email" required />
+          <TextField label="Password" variant="outlined" type="password" name="password" required />
+          <TextField label="Repeat Password" variant="outlined" type="password" name="rpassword" required />
+
+          <Box sx={{ display: 'flex' }}>
+            <Link href="/login" sx={{ flex: 1 }}>
+              I already have an account
+            </Link>
+            <Button type="submit" variant="contained" color="primary">
+              {isLoading && <CircularProgress size={'sm'} />}
+              Signup
+            </Button>
+          </Box>
+
+          {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
+        </Stack>
+      </form>
+    </Container>
   );
 }
 
@@ -61,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   if (user) {
     return {
       redirect: {
-        destination: "/",
+        destination: '/',
         permanent: false,
       },
     };

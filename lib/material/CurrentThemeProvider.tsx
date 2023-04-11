@@ -54,6 +54,10 @@ export function CurrentThemeProvider({ children }: { children: React.ReactNode }
 
   const theme = React.useMemo(() => (currentPalette === 'dark' ? darkTheme : lightTheme), [currentPalette]);
 
+  React.useEffect(() => {
+    document.documentElement.style.setProperty('color-scheme', currentPalette);
+  }, [currentPalette]);
+
   if (currentPalette === null) {
     return null;
   }

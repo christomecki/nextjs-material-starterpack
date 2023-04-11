@@ -7,7 +7,7 @@ import { ObjectId } from 'mongodb';
 
 export type User = {
   createdAt: number;
-  username: string;
+  email: string;
   hash: string;
   salt: string;
 };
@@ -24,23 +24,26 @@ export type UserDto = ReturnType<typeof userDto>;
 
 const userCollection = database.collection<User>('user');
 
-export async function createUser(username: string, password: string) {
+export async function createUser(email: string, password: string) {
+  if (await findUser(email)) {
+    throw new Error('User already exists');
+  }
   const salt = crypto.randomBytes(16).toString('hex');
   const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
   const user: User = {
     createdAt: Date.now(),
-    username,
+    email: email.toLowerCase(),
     hash,
     salt,
   };
 
   await userCollection.insertOne(user);
 
-  return { username, createdAt: Date.now() };
+  return { email, createdAt: Date.now() };
 }
 
-export async function findUser(username: string) {
-  return userCollection.findOne<UserWithId>({ username });
+export async function findUser(email: string) {
+  return userCollection.findOne<UserWithId>({ email: email.toLowerCase() });
 }
 
 export function validatePassword(user: UserWithId, inputPassword: string) {
@@ -60,4 +63,8 @@ export async function getUserFromSession(req: RequestWithCookies) {
   } catch (error) {
     return undefined;
   }
+}
+
+export function isValidEmailAddress(emailAddress: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
 }

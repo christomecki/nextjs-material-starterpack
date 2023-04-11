@@ -1,9 +1,9 @@
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import { GetServerSideProps } from "next";
-import { getUserFromSession, UserDto } from "@/lib/auth/user";
-import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import { GetServerSideProps } from 'next';
+import { getUserFromSession, UserDto } from '@/lib/auth/user';
+import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
 
 type Props = {
   user: UserDto | null;
@@ -15,10 +15,10 @@ export default function Home({ user }: Props) {
       <Box
         sx={{
           my: 4,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom>
@@ -27,7 +27,7 @@ export default function Home({ user }: Props) {
         <Link href="/about" color="secondary">
           Go to the about page
         </Link>
-        <Button onClick={() => alert("hello")}>Click</Button>
+        <Button onClick={() => alert('hello')}>Click</Button>
       </Box>
 
       <h1>Passport.js Example</h1>
@@ -35,11 +35,8 @@ export default function Home({ user }: Props) {
       <p>Steps to test the example:</p>
 
       <ol>
-        <li>Click Login and enter a username and password.</li>
-        <li>
-          Youll be redirected to Home. Click on Profile, notice how your session is being used through a token stored in
-          a cookie.
-        </li>
+        <li>Click Login and enter a email and password.</li>
+        <li>Youll be redirected to Home. Click on Profile, notice how your session is being used through a token stored in a cookie.</li>
         <li>Click Logout and try to go to Profile again. Youll get redirected to Login.</li>
       </ol>
 

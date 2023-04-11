@@ -1,8 +1,7 @@
-import { Container } from "@mui/system";
-import Footer, { FOOTER_HEIGHT } from "./footer";
-import Header from "./header";
-import Box from "@mui/material/Box";
-import { UserDto } from "@/lib/auth/user";
+import Footer, { FOOTER_HEIGHT } from './footer';
+import Header from './header';
+import Box from '@mui/material/Box';
+import { UserDto } from '@/lib/auth/user';
 
 export default function Layout({ children, user }: React.PropsWithChildren<{ user: UserDto | undefined | null }>) {
   return (
@@ -12,9 +11,7 @@ export default function Layout({ children, user }: React.PropsWithChildren<{ use
           <Header user={user} />
         </header>
         <main>
-          <Container sx={{ backgroundColor: "rgba(0, 0, 0, 0.01)", position: "relative", padding: 2 }}>
-            {children}
-          </Container>
+          <Box sx={{ position: 'relative', padding: 2 }}>{children}</Box>
         </main>
       </Box>
       <footer>
