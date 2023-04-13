@@ -8,6 +8,7 @@ import Layout from '@/components/layout';
 import { CurrentThemeProvider } from '@/lib/material/CurrentThemeProvider';
 
 import '../styles/globals.css';
+import { CookieNotice } from '@/components/cookieNotice';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -28,6 +29,7 @@ export default function MyApp(props: MyAppProps) {
         <Layout user={pageProps?.user}>
           <Component {...pageProps} />
         </Layout>
+        <CookieNotice />
       </CurrentThemeProvider>
     </CacheProvider>
   );
