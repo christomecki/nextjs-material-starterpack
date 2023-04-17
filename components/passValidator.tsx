@@ -56,7 +56,7 @@ export default function PassValidator({ password, passwordCorrect }: PassValidat
 
 function CorrectProps({ children }: { children: React.ReactNode }) {
     return (
-        <Box sx={{ color: 'rgb(166, 221, 191)', display: 'flex', mb: '5px' }}>
+        <Box sx={{ color: 'rgb(166, 221, 190)', display: 'flex', mb: '5px' }}>
             <CheckIcon sx={{ mr: '10px' }} /><Box>{children}</Box>
         </Box>
     )
