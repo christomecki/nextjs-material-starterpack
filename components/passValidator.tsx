@@ -1,7 +1,8 @@
+import { useEffect} from "react";
 import { Box } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-import { useEffect, useState } from "react";
+
 
 interface PassValidatorProps {
     password: string;
@@ -25,7 +26,7 @@ export default function PassValidator({ password, passwordCorrect }: PassValidat
     }, [password])
 
     return (
-        <Box>
+        <Box sx={{border: '1px solid', borderColor: 'rgb(101, 101, 101)', borderRadius: '5px', padding: '10px'}}> 
             {hasMinLength
                 ? <CorrectProps>Minimum length 8</CorrectProps>
                 : <IncorrectProps>Minimum length 8</IncorrectProps>
