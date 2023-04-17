@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from "react";
 
 interface PassValidatorProps {
@@ -56,16 +56,16 @@ export default function PassValidator({ password, passwordCorrect }: PassValidat
 
 function CorrectProps({ children }: { children: React.ReactNode }) {
     return (
-        <Box sx={{ color: 'green', display: 'flex' }}>
-            <CheckCircleIcon sx={{ pr: '5px' }} /><Box>{children}</Box>
+        <Box sx={{ color: 'rgb(166, 221, 191)', display: 'flex', mb: '5px' }}>
+            <CheckIcon sx={{ mr: '10px' }} /><Box>{children}</Box>
         </Box>
     )
 }
 
 function IncorrectProps({ children }: { children: React.ReactNode }) {
     return (
-        <Box sx={{ color: 'red', display: 'flex' }}>
-            <CancelIcon sx={{ pr: '5px' }} /><Box>{children}</Box>
+        <Box sx={{ color: 'rgb(255, 180, 195)', display: 'flex', mb: '5px' }}>
+            <ClearIcon sx={{ mr: '10px' }} /><Box>{children}</Box>
         </Box>
     )
 }
