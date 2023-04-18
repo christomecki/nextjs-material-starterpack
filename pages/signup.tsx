@@ -49,16 +49,20 @@ export default function Signup() {
     }
   };
 
-  function passwordCorrect(data: boolean) {
-    setValidationDone(data);
-  }
-
   return (
     <Container maxWidth="sm">
-      <Box component='form' onSubmit={onSubmit}>
+      <Box component="form" onSubmit={onSubmit}>
         <Stack spacing={2}>
           <TextField label="Email address" variant="outlined" type="text" name="email" required />
-          <TextField label="Password" variant="outlined" type="password" name="password" value={password} onChange={e => setPassword(e.target.value)} required />
+          <TextField
+            label="Password"
+            variant="outlined"
+            type="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
           <TextField label="Repeat Password" variant="outlined" type="password" name="rpassword" required />
 
           <Box sx={{ display: 'flex' }}>
@@ -70,7 +74,7 @@ export default function Signup() {
               Signup
             </Button>
           </Box>
-          <PassValidator password={password} passwordCorrect={passwordCorrect}></PassValidator>
+          <PassValidator password={password} passwordCorrect={setValidationDone}></PassValidator>
           {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
         </Stack>
       </Box>
