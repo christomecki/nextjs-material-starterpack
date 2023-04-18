@@ -2,7 +2,7 @@ import { FormEvent, useState } from 'react';
 import Router from 'next/router';
 import { GetServerSideProps } from 'next';
 import { getUserFromSession } from '@/lib/auth/user';
-import { Alert, Box, Button, CircularProgress, Container, Link, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Container, Link, Stack, TextField } from '@mui/material';
 import PassValidator from '@/components/passValidator';
 
 export default function Signup() {

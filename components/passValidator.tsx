@@ -2,7 +2,7 @@ import { useEffect} from "react";
 import { Box } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-
+import passwordValidation from "@/lib/passValidation/passwordValidaton";
 
 interface PassValidatorProps {
     password: string;
@@ -10,13 +10,7 @@ interface PassValidatorProps {
 }
 
 export default function PassValidator({ password, passwordCorrect }: PassValidatorProps) {
-    const hasMinLength = password.length >= 8;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
-    const hasNoSpaces = !/\s/.test(password);
-    
+    const [ hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces ] = passwordValidation(password);
     useEffect(() => {
         if (hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && hasNoSpaces) {
             passwordCorrect(true);
