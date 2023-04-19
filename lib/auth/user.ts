@@ -24,7 +24,7 @@ export type UserDto = ReturnType<typeof userDto>;
 
 const userCollection = database.collection<User>('user');
 
-export async function createUser(email: string, password: string) {
+export async function createUser(email: string, password: string): Promise<UserWithId> {
   if (await findUser(email)) {
     throw new Error('User already exists');
   }
@@ -37,9 +37,9 @@ export async function createUser(email: string, password: string) {
     salt,
   };
 
-  await userCollection.insertOne(user);
+  const insertOneResult = await userCollection.insertOne(user);
 
-  return { email, createdAt: Date.now() };
+  return { ...user, _id: String(insertOneResult.insertedId) };
 }
 
 export async function findUser(email: string) {
