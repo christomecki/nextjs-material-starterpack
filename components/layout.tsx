@@ -20,3 +20,4 @@ export default function Layout({ children, user }: React.PropsWithChildren<{ use
     </>
   );
 }
+//(theme) => ({ minHeight: `calc(100vh - ${FOOTER_HEIGHT}px)`, backgroundColor: theme.shadows })
