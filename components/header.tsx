@@ -1,12 +1,15 @@
-import { AppBar, Button, IconButton, Toolbar, Typography, ButtonProps, Menu, MenuItem, Link, useScrollTrigger, Slide } from '@mui/material';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import { AppBar, Button, IconButton, Toolbar, Typography, Menu, MenuItem, Link, useScrollTrigger, Slide, ListItemIcon } from '@mui/material';
 import DarkMode from '@mui/icons-material/DarkMode';
 import LightMode from '@mui/icons-material/LightMode';
 import { UserDto } from '@/lib/auth/user';
 import { useCurrentTheme } from '@/lib/material/CurrentThemeProvider';
 import { useIsMobile } from '@/lib/material/useIsMobile';
 import React from 'react';
-import { AccountCircle, Dns, Home, Logout, Person2 } from '@mui/icons-material';
+import { AccountCircle, Dns, Home, Logout, Person2, Menu as MenuIcon } from '@mui/icons-material';
+import { Box, Stack } from '@mui/system';
+import logo from '@/public/next.svg';
+import Image from 'next/image';
+import NextLink from 'next/link';
 
 const menuItems = [
   { icon: <Home />, label: 'Home', linkTo: '/' },
@@ -14,182 +17,120 @@ const menuItems = [
 ];
 
 export default function Header({ user }: { user: UserDto | undefined | null }) {
-  const currentTheme = useCurrentTheme();
-
   const isMobile = useIsMobile();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const [anchorOpt, setAnchorOpt] = React.useState<null | HTMLElement>(null);
-  const openOpt = Boolean(anchorOpt);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose: any = () => {
-    setAnchorEl(null);
-  };
-  const handleClickOpt = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorOpt(event.currentTarget);
-  };
-  const handleCloseOpt: any = () => {
-    setAnchorOpt(null);
-  };
+  const leftMenu = useMenu();
+  const rightMenu = useMenu();
 
   const trigger = useScrollTrigger();
 
-  return (
+  const container = (content: React.ReactNode) =>
+    isMobile ? (
+      <>
+        <Slide appear={false} direction="down" in={!trigger}>
+          <AppBar>
+            <Toolbar>{content}</Toolbar>
+          </AppBar>
+        </Slide>
+        <Toolbar />
+      </>
+    ) : (
+      <>
+        <AppBar position="fixed">
+          <Toolbar>{content}</Toolbar>
+        </AppBar>
+        <Toolbar />
+      </>
+    );
+
+  const leftElementsContainer = (content: React.ReactNode[]) =>
+    isMobile ? (
+      <Menu anchorEl={leftMenu.anchorEl} open={leftMenu.isOpen} onClick={leftMenu.close}>
+        {content}
+      </Menu>
+    ) : (
+      <Stack direction="row" spacing={2}>
+        {content}
+      </Stack>
+    );
+
+  const LeftElement = isMobile ? MItem : MButton;
+
+  return container(
     <>
-      {isMobile ? (
+      {isMobile && (
+        <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={leftMenu.open} sx={{ padding: '10px', marginLeft: '5px' }}>
+          <MenuIcon />
+        </IconButton>
+      )}
+      <NextLink href="/" style={{ display: 'flex' }}>
+        <Image src={logo} alt="LOGO" height={isMobile ? 15 : 30} />
+      </NextLink>
+      <Box sx={{ mr: 2 }}></Box>
+      {leftElementsContainer(menuItems.map((items) => <LeftElement key={items.label} href={items.linkTo} label={items.label} icon={items.icon} />))}
+      <Box sx={{ flexGrow: 1 }} /> {/* This element pushes all below elements to the right */}
+      <ChangeThemeButton />
+      {user ? (
         <>
-          <AppBar position="static" sx={{ marginTop: '64px' }} />
-          <Slide appear={false} direction="down" in={!trigger}>
-            <AppBar>
-              <Toolbar>
-                <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={handleClick} sx={{ padding: '10px', marginLeft: '5px' }}>
-                  <TextSnippetIcon />
-                </IconButton>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                  }}
-                >
-                  {menuItems.map((items) => (
-                    <div key={items.label}>
-                      <MenuItem component={Link} href={items.linkTo} onClick={handleClose}>
-                        <IconButton size="large" edge="start" color="inherit" aria-label="menu">
-                          {items.icon}
-                        </IconButton>
-                        <Typography sx={{ flexGrow: 1 }}>{items.label}</Typography>
-                      </MenuItem>
-                    </div>
-                  ))}
-                </Menu>
-                <Typography sx={{ flexGrow: 1, padding: '10px' }} onClick={handleClick} />
-                <IconButton
-                  size="medium"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  onClick={() => currentTheme.setTheme(currentTheme.theme === 'light' ? 'dark' : 'light')}
-                >
-                  {currentTheme.theme === 'dark' ? <DarkMode /> : <LightMode />}
-                </IconButton>
-                {user ? (
-                  <>
-                    <IconButton
-                      size="large"
-                      edge="start"
-                      color="inherit"
-                      aria-label="menu"
-                      onClick={handleClickOpt}
-                      sx={{ padding: '10px', marginLeft: '5px' }}
-                    >
-                      <AccountCircle />
-                    </IconButton>
-                    <Menu
-                      id="basic-menu-options"
-                      anchorEl={anchorOpt}
-                      open={openOpt}
-                      onClose={handleCloseOpt}
-                      MenuListProps={{
-                        'aria-labelledby': 'basic-button',
-                      }}
-                    >
-                      <MenuItem component={Link} href="/profile" onClick={handleCloseOpt}>
-                        <IconButton size="large" edge="start" color="inherit" aria-label="menu">
-                          <Person2 />
-                        </IconButton>
-                        <Typography sx={{ flexGrow: 1 }}>Profile</Typography>
-                      </MenuItem>
-                      <MenuItem component={Link} href="/api/logout" onClick={handleCloseOpt}>
-                        <IconButton size="large" edge="start" color="inherit" aria-label="menu">
-                          <Logout />
-                        </IconButton>
-                        <Typography sx={{ flexGrow: 1 }}>Logout</Typography>
-                      </MenuItem>
-                    </Menu>
-                  </>
-                ) : (
-                  <>
-                    <Button sx={{ color: 'inherit' }} href="/login">
-                      Login
-                    </Button>
-                  </>
-                )}
-              </Toolbar>
-            </AppBar>
-          </Slide>
+          <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={rightMenu.open} sx={{ padding: '10px', marginLeft: '5px' }}>
+            <AccountCircle />
+          </IconButton>
+          <Menu anchorEl={rightMenu.anchorEl} open={rightMenu.isOpen} onClick={rightMenu.close}>
+            <MItem label="Profile" href="/profile" icon={<Person2 />} />
+            <MItem label="Logout" href="/api/logout" icon={<Logout />} />
+          </Menu>
         </>
       ) : (
-        <AppBar position="static">
-          <Toolbar>
-            {menuItems.map((items) => (
-              <IconButton key={items.label} color="inherit" href={items.linkTo} disableRipple>
-                <Typography>
-                  <IconButton size="large" color="inherit" edge="start" aria-label="menu" disableRipple>
-                    {items.icon}
-                  </IconButton>
-                  {items.label}
-                </Typography>
-              </IconButton>
-            ))}
-
-            <Typography sx={{ flexGrow: 1, padding: '10px' }} />
-            <IconButton
-              size="medium"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              onClick={() => currentTheme.setTheme(currentTheme.theme === 'light' ? 'dark' : 'light')}
-            >
-              {currentTheme.theme === 'dark' ? <DarkMode /> : <LightMode />}
-            </IconButton>
-            {user ? (
-              <>
-                <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={handleClickOpt} sx={{ padding: '10px', marginLeft: '5px' }}>
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="basic-menu-options"
-                  anchorEl={anchorOpt}
-                  open={openOpt}
-                  onClose={handleCloseOpt}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                  }}
-                >
-                  <MenuItem component={Link} href="/profile" onClick={handleCloseOpt}>
-                    <IconButton size="large" edge="start" color="inherit" aria-label="menu">
-                      <Person2 />
-                    </IconButton>
-                    <Typography sx={{ flexGrow: 1 }}>Profile</Typography>
-                  </MenuItem>
-                  <MenuItem component={Link} href="/api/logout" onClick={handleCloseOpt}>
-                    <IconButton size="large" edge="start" color="inherit" aria-label="menu">
-                      <Logout />
-                    </IconButton>
-                    <Typography sx={{ flexGrow: 1 }}>Logout</Typography>
-                  </MenuItem>
-                </Menu>
-              </>
-            ) : (
-              <>
-                <Button sx={{ color: 'inherit' }} href="/login">
-                  Login
-                </Button>
-              </>
-            )}
-          </Toolbar>
-        </AppBar>
+        <>
+          <MButton label="Login" href="/login" />
+        </>
       )}
     </>
   );
 }
 
-function HeaderButton(props: ButtonProps) {
-  return <Button variant="contained" color="primary" sx={{ boxShadow: 'none' }} {...props} />;
+function MItem({ label, href, icon, onClick }: { label: string; href: string; icon: React.ReactNode; onClick?: () => void }) {
+  return (
+    <MenuItem component={Link} href={href} onClick={onClick}>
+      <ListItemIcon>{icon}</ListItemIcon>
+      <Typography>{label}</Typography>
+    </MenuItem>
+  );
+}
+
+function MButton({ label, href, icon }: { label: string; href: string; icon?: React.ReactNode }) {
+  return (
+    <Button variant="contained" sx={{ boxShadow: 'none' }} href={href} startIcon={icon}>
+      {label}
+    </Button>
+  );
+}
+
+function ChangeThemeButton() {
+  const currentTheme = useCurrentTheme();
+  return (
+    <IconButton
+      size="medium"
+      edge="start"
+      color="inherit"
+      aria-label="menu"
+      onClick={() => currentTheme.setTheme(currentTheme.theme === 'light' ? 'dark' : 'light')}
+    >
+      {currentTheme.theme === 'dark' ? <DarkMode /> : <LightMode />}
+    </IconButton>
+  );
+}
+
+function useMenu() {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const isOpen = Boolean(anchorEl);
+
+  const open = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const close = () => {
+    setAnchorEl(null);
+  };
+
+  return { anchorEl, isOpen, open, close };
 }
