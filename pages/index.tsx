@@ -40,6 +40,18 @@ export default function Home({ user }: Props) {
         <li>Click Logout and try to go to Profile again. Youll get redirected to Login.</li>
       </ol>
 
+      <p> Need more content to tests so...</p>
+
+      <h3>Pippin`s song </h3>
+      <p> Home is behind the world ahead.</p>
+      <p> And there are many paths to tread. </p>
+      <p> Through shadow to the edge of night, </p>
+      <p> Until the stars are all alight... </p>
+      <p> Mist and hadow, </p>
+      <p> Cloud and shade, </p>
+      <p> All shall fade... </p>
+      <p> All shall fade...</p>
+
       {user && (
         <>
           <p>Currently logged in as:</p>
