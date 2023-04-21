@@ -41,7 +41,7 @@ export default function Header({ user }: { user: UserDto | undefined | null }) {
     <>
       {isMobile ? (
         <>
-          <AppBar position="static" sx={{ marginTop: '56px' }} />
+          <AppBar position="static" sx={{ marginTop: '64px' }} />
           <Slide appear={false} direction="down" in={!trigger}>
             <AppBar>
               <Toolbar>
