@@ -65,6 +65,7 @@ export default function Signup() {
           />
           <TextField label="Repeat Password" variant="outlined" type="password" name="rpassword" required />
 
+          <PassValidator password={password} passwordCorrect={setValidationDone}></PassValidator>
           <Box sx={{ display: 'flex' }}>
             <Link href="/login" sx={{ flex: 1 }}>
               I already have an account
@@ -74,7 +75,6 @@ export default function Signup() {
               Signup
             </Button>
           </Box>
-          <PassValidator password={password} passwordCorrect={setValidationDone}></PassValidator>
           {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
         </Stack>
       </Box>
