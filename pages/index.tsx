@@ -3,49 +3,63 @@ import Box from '@mui/material/Box';
 import { GetServerSideProps } from 'next';
 import { getUserFromSession, UserDto } from '@/lib/auth/user';
 import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
+import Image from 'next/image';
+import Divider from '@mui/material/Divider';
+import { FOOTER_HEIGHT } from '@/components/footer';
+import indexImage from '@/public/sea.jpg';
 
 type Props = {
   user: UserDto | null;
 };
+
+
+const scrollDown = () => {
+  window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
+}
 
 export default function Home({ user }: Props) {
   return (
     <>
       <Box
         sx={{
-          my: 4,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          minHeight: `calc(100vh - ${FOOTER_HEIGHT}px)`,
+          textAlign: 'center',
+        }}
+      >
+        <Box sx={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
+          gap: 2,
+        }}>
+          <Image src={indexImage} alt="Picture of the author" width={1200} height={300} />
+          <Typography width='60%' variant="h3" component="h1" gutterBottom>
+            Welcome on our website!
+          </Typography>
+        </Box>
+        <Typography width='40%' variant="subtitle1" gutterBottom>Est fugiat dolor cupidatat nisi ipsum commodo commodo eu ad. Et proident duis laboris sint excepteur. Consectetur tempor reprehenderit in magna in id velit consequat reprehenderit. Esse tempor ut excepteur ex cupidatat eiusmod proident ex duis. Irure eu non ut eu anim id nulla ea tempor eu nulla culpa dolore.</Typography>
+        <Button sx={{ justifySelf: 'flex-end' }} onClick={() => scrollDown()}>Learn more</Button>
+      </Box>
+      <Box sx={{ maxWidth: '30%', margin: 'auto' }} >
+        <Divider />
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: `calc(100vh - ${FOOTER_HEIGHT}px)`,
         }}
       >
-        <Typography variant="h4" component="h1" gutterBottom>
-          Material UI - Next.js example in TypeScript
-        </Typography>
-        <Link href="/about" color="secondary">
-          Go to the about page
-        </Link>
-        <Button onClick={() => alert('hello')}>Click</Button>
+        <Typography>CONTENT</Typography>
       </Box>
 
-      <h1>Passport.js Example</h1>
-
-      <p>Steps to test the example:</p>
-
-      <ol>
-        <li>Click Login and enter a email and password.</li>
-        <li>Youll be redirected to Home. Click on Profile, notice how your session is being used through a token stored in a cookie.</li>
-        <li>Click Logout and try to go to Profile again. Youll get redirected to Login.</li>
-      </ol>
-
-      {user && (
-        <>
-          <p>Currently logged in as:</p>
-          <pre>{JSON.stringify(user, null, 2)}</pre>
-        </>
-      )}
 
       <style jsx>{`
         li {
