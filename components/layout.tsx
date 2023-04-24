@@ -11,7 +11,7 @@ export default function Layout({ children, user }: React.PropsWithChildren<{ use
           <Header user={user} />
         </header>
         <main>
-          <Box sx={{ position: 'relative', padding: 2 }}>{children}</Box>
+          <Box sx={{ position: 'relative', padding: 0 }}>{children}</Box>
         </main>
       </Box>
       <footer>
