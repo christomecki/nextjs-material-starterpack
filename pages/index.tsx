@@ -60,7 +60,6 @@ export default function Home({ user }: Props) {
         <Typography>CONTENT</Typography>
       </Box>
 
-
       <style jsx>{`
         li {
           margin-bottom: 0.5rem;
