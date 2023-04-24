@@ -4,6 +4,7 @@ import { GetServerSideProps } from 'next';
 import { getUserFromSession } from '@/lib/auth/user';
 import { Alert, Box, Button, CircularProgress, Container, Link, Stack, TextField } from '@mui/material';
 import PassValidator from '@/components/passValidator';
+import { FormPageWrapper } from '@/components/formPageWrapper';
 
 export default function Signup() {
   const [errorMsg, setErrorMsg] = useState('');
@@ -50,7 +51,7 @@ export default function Signup() {
   };
 
   return (
-    <Container maxWidth="sm">
+    <FormPageWrapper title={'Sign up'}>
       <Box component="form" onSubmit={onSubmit}>
         <Stack spacing={2}>
           <TextField label="Email address" variant="outlined" type="text" name="email" required />
@@ -78,7 +79,7 @@ export default function Signup() {
           {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
         </Stack>
       </Box>
-    </Container>
+    </FormPageWrapper>
   );
 }
 

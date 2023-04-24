@@ -2,9 +2,10 @@ import { FormEvent, useState } from 'react';
 import Router from 'next/router';
 import { GetServerSideProps } from 'next';
 import { getUserFromSession } from '@/lib/auth/user';
-import { Alert, Box, Button, CircularProgress, Container, TextField } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Container, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import Link from '@mui/material/Link';
+import { FormPageWrapper } from '@/components/formPageWrapper';
 
 export default function Login() {
   const [errorMsg, setErrorMsg] = useState('');
@@ -39,7 +40,7 @@ export default function Login() {
   };
 
   return (
-    <Container maxWidth="sm">
+    <FormPageWrapper title="Sign in">
       <form onSubmit={onSubmit}>
         <Stack spacing={2}>
           <TextField label="Email" variant="outlined" type="text" name="email" required />
@@ -58,7 +59,7 @@ export default function Login() {
           {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
         </Stack>
       </form>
-    </Container>
+    </FormPageWrapper>
   );
 }
 
