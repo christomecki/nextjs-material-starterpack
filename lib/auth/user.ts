@@ -10,6 +10,7 @@ export type User = {
   email: string;
   hash: string;
   salt: string;
+  chain: string;
 };
 
 export type UserWithId = User & {
@@ -17,7 +18,7 @@ export type UserWithId = User & {
 };
 
 export function userDto(user: User) {
-  return omit(user, ['hash', 'salt', '_id']) as Omit<User, 'hash' | 'salt' | '_id'>;
+  return omit(user, ['hash', 'salt', '_id', 'chain']) as Omit<User, 'hash' | 'salt' | '_id' | 'chain'>;
 }
 
 export type UserDto = ReturnType<typeof userDto>;
@@ -25,7 +26,7 @@ export type UserDto = ReturnType<typeof userDto>;
 const userCollection = database.collection<User>('user');
 
 export async function createUser(email: string, password: string): Promise<UserWithId> {
-  if (await findUser(email)) {
+  if (await findUserByEmail(email)) {
     throw new Error('User already exists');
   }
   const salt = crypto.randomBytes(16).toString('hex');
@@ -35,6 +36,7 @@ export async function createUser(email: string, password: string): Promise<UserW
     email: email.toLowerCase(),
     hash,
     salt,
+    chain: '0',
   };
 
   const insertOneResult = await userCollection.insertOne(user);
@@ -42,8 +44,16 @@ export async function createUser(email: string, password: string): Promise<UserW
   return { ...user, _id: String(insertOneResult.insertedId) };
 }
 
-export async function findUser(email: string) {
-  return userCollection.findOne<UserWithId>({ email: email.toLowerCase() });
+export async function findUserByEmail(email: string) {
+  return await userCollection.findOne<UserWithId>({ email: email.toLowerCase() });
+}
+
+export async function findUserById(id: string | ObjectId) {
+  return await userCollection.findOne({ _id: new ObjectId(id) });
+}
+
+export async function updateUser(id: string | ObjectId, update: Partial<User>) {
+  return await userCollection.updateOne({ _id: new ObjectId(id) }, { $set: update });
 }
 
 export function validatePassword(user: UserWithId, inputPassword: string) {

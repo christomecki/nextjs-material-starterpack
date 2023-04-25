@@ -1,6 +1,7 @@
 import Iron from '@hapi/iron';
 import { UserWithId } from './user';
 import smtp from '../smtp';
+import { v4 as uuidv4 } from 'uuid';
 
 const EMAIL_VERIFICATION_SECRET = process.env.EMAIL_VERIFICATION_SECRET;
 const MAX_AGE = 60 * 60 * 8; // 8 hours
@@ -11,10 +12,19 @@ export type EmailVerificationPayload = {
   userId: string;
   createdAt: number;
   maxAge: number;
+  chainNext: string;
+  chainPrev: string;
 };
 
 function isEmailVerificationPayload(payload: any): payload is EmailVerificationPayload {
-  return typeof payload === 'object' && typeof payload.createdAt === 'number' && typeof payload.maxAge === 'number' && typeof payload.userId === 'string';
+  return (
+    typeof payload === 'object' &&
+    typeof payload.createdAt === 'number' &&
+    typeof payload.maxAge === 'number' &&
+    typeof payload.userId === 'string' &&
+    typeof payload.chainNext === 'string' &&
+    typeof payload.chainPrev === 'string'
+  );
 }
 
 export async function generateToken(user: UserWithId) {
@@ -27,6 +37,8 @@ export async function generateToken(user: UserWithId) {
     userId: String(user._id),
     createdAt: Date.now(),
     maxAge: MAX_AGE,
+    chainPrev: user.chain,
+    chainNext: uuidv4(),
   };
   const token = await Iron.seal(payload, EMAIL_VERIFICATION_SECRET, Iron.defaults);
   return token;
@@ -34,8 +46,7 @@ export async function generateToken(user: UserWithId) {
 
 export async function verifyToken(token: string) {
   if (EMAIL_VERIFICATION_SECRET == null) {
-    console.error('EMAIL_VERIFICATION_SECRET is undefiend');
-    return;
+    throw new Error('EMAIL_VERIFICATION_SECRET is undefiend');
   }
 
   const payload = await Iron.unseal(token, EMAIL_VERIFICATION_SECRET, Iron.defaults);

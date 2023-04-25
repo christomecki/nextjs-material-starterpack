@@ -1,5 +1,5 @@
 import Local from 'passport-local';
-import { findUser, validatePassword } from './user';
+import { findUserByEmail, validatePassword } from './user';
 
 export const localStrategy = new Local.Strategy(
   {
@@ -7,7 +7,7 @@ export const localStrategy = new Local.Strategy(
     passwordField: 'password',
   },
   function (email, password, done) {
-    findUser(email)
+    findUserByEmail(email)
       .then((user) => {
         if (user && validatePassword(user, password)) {
           done(null, user);

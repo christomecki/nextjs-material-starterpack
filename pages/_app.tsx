@@ -9,6 +9,7 @@ import { CurrentThemeProvider } from '@/lib/material/CurrentThemeProvider';
 
 import '../styles/globals.css';
 import { CookieNotice } from '@/components/cookieNotice';
+import { FeedbackMessage } from '@/components/FeedbackMessage';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -26,6 +27,7 @@ export default function MyApp(props: MyAppProps) {
       </Head>
       <CurrentThemeProvider>
         <CssBaseline />
+        <FeedbackMessage />
         <Layout user={pageProps?.user}>
           <Component {...pageProps} />
         </Layout>
