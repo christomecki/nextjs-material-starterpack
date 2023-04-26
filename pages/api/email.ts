@@ -1,5 +1,6 @@
 import { verifyToken } from '@/lib/auth/emailVerification';
 import { findUserById, updateUser } from '@/lib/auth/user';
+import { feedbackUrlParam } from '@/lib/feedback';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function email(req: NextApiRequest, res: NextApiResponse) {
@@ -27,7 +28,7 @@ export default async function email(req: NextApiRequest, res: NextApiResponse) {
       chain: payload.chainNext,
     });
 
-    res.redirect('/?feedback=email-verified');
+    res.redirect(`/?${feedbackUrlParam('email-verified')})}`);
   } catch (error: any) {
     console.error(error);
     res.status(500).end(error.message);
