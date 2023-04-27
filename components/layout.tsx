@@ -2,6 +2,7 @@ import Footer, { FOOTER_HEIGHT } from './footer';
 import Header from './header';
 import Box from '@mui/material/Box';
 import { UserDto } from '@/lib/auth/user';
+import ErrorBoundary from './ErrorBoundary';
 
 export default function Layout({ children, user }: React.PropsWithChildren<{ user: UserDto | undefined | null }>) {
   return (
@@ -11,7 +12,9 @@ export default function Layout({ children, user }: React.PropsWithChildren<{ use
           <Header user={user} />
         </header>
         <main>
-          <Box sx={{ position: 'relative', padding: 0 }}>{children}</Box>
+          <ErrorBoundary>
+            <Box sx={{ position: 'relative', padding: 0 }}>{children}</Box>
+          </ErrorBoundary>
         </main>
       </Box>
       <footer>
