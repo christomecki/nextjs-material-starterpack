@@ -1,17 +1,12 @@
-import { UserDto } from '@/lib/auth/user';
 import { useIsMobile } from '@/lib/material/useIsMobile';
 import { Alert, Box, Button, Collapse, TextField, Typography } from '@mui/material';
 import Router from 'next/router';
 import React, { FormEvent } from 'react'
 
-type Props = {
-    user: UserDto;
-};
 
-export default function DeleteAccount({ user }: Props) {
+export default function DeleteAccount() {
     const [password, setPassword] = React.useState<string>('');
     const [errorMsg, setErrorMsg] = React.useState<string>('');
-    const [successMsg, setSuccessMsg] = React.useState<string>('');
     const isMobile = useIsMobile();
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -30,7 +25,6 @@ export default function DeleteAccount({ user }: Props) {
             if (res.status !== 200) {
                 setErrorMsg('Something went wrong');
             } else {
-                setSuccessMsg('Account deleted');
                 await fetch('api/logout');
                 Router.push('/')
             }

@@ -1,7 +1,6 @@
 import { removeTokenCookie } from '@/lib/auth/auth-cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { deleteUserAccount, findUser, getUserFromSession } from '@/lib/auth/user';
-import React from 'react';
 
 export default async function deleteAccount(req: NextApiRequest, res: NextApiResponse) {
   const user = await getUserFromSession(req);

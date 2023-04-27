@@ -1,7 +1,7 @@
 import React from "react";
 import { GetServerSideProps } from "next";
 import { getUserFromSession, UserDto } from "@/lib/auth/user";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
 import CustomButton from "@/components/CustomButton";
 import SettingsIcon from '@mui/icons-material/Settings';
