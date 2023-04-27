@@ -2,7 +2,7 @@ import { FormEvent, useState } from 'react';
 import Router from 'next/router';
 import { GetServerSideProps } from 'next';
 import { getUserFromSession } from '@/lib/auth/user';
-import { Alert, Box, Button, CircularProgress, Container, TextField } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Container, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import Link from '@mui/material/Link';
 
@@ -45,13 +45,19 @@ export default function Login() {
           <TextField label="Email" variant="outlined" type="text" name="email" required />
           <TextField label="Password" variant="outlined" type="password" name="password" required />
 
-          <Box sx={{ display: 'flex' }}>
-            <Link href="/signup" sx={{ flex: 1 }}>
-              I dont have an account
-            </Link>
-            <Button type="submit" variant="contained" color="primary" disabled={isLoading}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button href="forgotPassword">Forgot password?</Button>
+
+            <Button type="submit" variant="contained" color="success" disabled={isLoading}>
               {isLoading && <CircularProgress size={'sm'} />}
               Login
+            </Button>
+          </Box>
+
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, boxShadow: 1, px: 2, py: 1, borderRadius: 1 }}>
+            <Typography sx={{ my: 'auto' }}>New to our platform?</Typography>
+            <Button variant="outlined" href="/signup">
+              Create an account
             </Button>
           </Box>
 

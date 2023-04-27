@@ -25,12 +25,17 @@ export type UserDto = ReturnType<typeof userDto>;
 
 const userCollection = database.collection<User>('user');
 
+export function generateSaltAndHash(password: string) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+  return { salt, hash };
+}
+
 export async function createUser(email: string, password: string): Promise<UserWithId> {
   if (await findUserByEmail(email)) {
     throw new Error('User already exists');
   }
-  const salt = crypto.randomBytes(16).toString('hex');
-  const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+  const { salt, hash } = generateSaltAndHash(password);
   const user: User = {
     createdAt: Date.now(),
     email: email.toLowerCase(),

@@ -28,7 +28,7 @@ export default async function email(req: NextApiRequest, res: NextApiResponse) {
       chain: payload.chainNext,
     });
 
-    res.redirect(`/?${feedbackUrlParam('email-verified')})}`);
+    res.redirect(`/?${feedbackUrlParam('email-verified')}`);
   } catch (error: any) {
     console.error(error);
     res.status(500).end(error.message);
