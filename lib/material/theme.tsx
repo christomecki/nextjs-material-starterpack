@@ -24,9 +24,6 @@ export const palette = {
   secondary: {
     main: '#19857b',
   },
-  error: {
-    main: red.A400,
-  },
 };
 
 const themeOptions: ThemeOptions = {

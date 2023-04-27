@@ -3,10 +3,14 @@ import Router from 'next/router';
 import { GetServerSideProps } from 'next';
 import { getUserFromSession } from '@/lib/auth/user';
 import { Alert, Box, Button, CircularProgress, Container, Link, Stack, TextField } from '@mui/material';
+import PassValidator from '@/components/passValidator';
+import { FormPageWrapper } from '@/components/formPageWrapper';
 
 export default function Signup() {
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [password, setPassword] = useState('');
+  const [validationDone, setValidationDone] = useState(false);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,35 +26,47 @@ export default function Signup() {
       setErrorMsg(`The passwords don't match`);
       return;
     }
-
-    try {
-      setIsLoading(true);
-      const res = await fetch('/api/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      if (res.status === 200) {
-        Router.push('/login');
-      } else {
-        throw new Error(await res.text());
+    if (validationDone) {
+      try {
+        setIsLoading(true);
+        const res = await fetch('/api/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        if (res.status === 200) {
+          Router.push('/login');
+        } else {
+          throw new Error(await res.text());
+        }
+      } catch (error: any) {
+        console.error('An unexpected error happened occurred:', error);
+        setErrorMsg(error.message);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error: any) {
-      console.error('An unexpected error happened occurred:', error);
-      setErrorMsg(error.message);
-    } finally {
-      setIsLoading(false);
+    } else {
+      setErrorMsg('Password does not meet the requirements');
     }
   };
 
   return (
-    <Container maxWidth="sm">
-      <form onSubmit={onSubmit}>
+    <FormPageWrapper title={'Sign up'}>
+      <Box component="form" onSubmit={onSubmit}>
         <Stack spacing={2}>
           <TextField label="Email address" variant="outlined" type="text" name="email" required />
-          <TextField label="Password" variant="outlined" type="password" name="password" required />
+          <TextField
+            label="Password"
+            variant="outlined"
+            type="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
           <TextField label="Repeat Password" variant="outlined" type="password" name="rpassword" required />
 
+          <PassValidator password={password} passwordCorrect={setValidationDone}></PassValidator>
           <Box sx={{ display: 'flex' }}>
             <Link href="/login" sx={{ flex: 1 }}>
               I already have an account
@@ -60,11 +76,10 @@ export default function Signup() {
               Signup
             </Button>
           </Box>
-
           {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
         </Stack>
-      </form>
-    </Container>
+      </Box>
+    </FormPageWrapper>
   );
 }
 
