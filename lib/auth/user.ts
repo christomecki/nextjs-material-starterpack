@@ -42,6 +42,17 @@ export async function createUser(email: string, password: string) {
   return { email, createdAt: Date.now() };
 }
 
+export async function deleteUserAccount(user: UserWithId, password: string) {
+  const passwordsMatch = validatePassword(user, password);
+  if (!passwordsMatch) {
+    console.log('passwordsMatch: ', passwordsMatch);
+    return false;
+  }
+  await userCollection.deleteOne({ _id: new ObjectId(user._id) });
+  console.log('isDeleted: ');
+  return true;
+}
+
 export async function findUser(email: string) {
   return userCollection.findOne<UserWithId>({ email: email.toLowerCase() });
 }

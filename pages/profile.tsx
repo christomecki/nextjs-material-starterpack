@@ -8,7 +8,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import InfoBox from '@/components/infoBox'
 import Settings from "@/components/settings";
-import { FOOTER_HEIGHT } from "@/components/footer";
 import { useIsMobile } from "@/lib/material/useIsMobile";
 
 type Props = {
@@ -32,7 +31,7 @@ export default function Profile({ user }: Props) {
       display: 'flex',
       flexDirection: 'row',
       flexWrap: 'wrap',
-      '@media (max-width: 1000px)': {
+      '@media (max-width: 1050px)': {
         width: '100%',
       },
     }}>

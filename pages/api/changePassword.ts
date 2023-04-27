@@ -17,7 +17,10 @@ export default async function changePassword(req: NextApiRequest, res: NextApiRe
           res.status(401).send({ done: false });
           return;
         }
-
+        if (oldpassword === password) {
+          res.status(401).send({ done: false });
+          return;
+        }
         const oldHash = crypto.pbkdf2Sync(password, user.salt, 1000, 64, 'sha512').toString('hex');
         if (oldHash === user.hash) {
           res.status(401).send({ done: false });

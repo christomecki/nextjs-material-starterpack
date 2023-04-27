@@ -1,14 +1,21 @@
 import { UserDto } from '@/lib/auth/user';
 import React, { FormEvent } from 'react'
-import { Box, Button, TextField, styled } from '@mui/material';
+import { Alert, Box, Button, TextField, styled } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
 import { useIsMobile } from '@/lib/material/useIsMobile';
-import passwordValidation from '@/lib/passValidation/passwordValidaton';
 import PassValidator from './passValidator';
+import DeleteAccount from './deleteAccount';
 
 type Props = {
     user: UserDto;
 };
+
+type Form = {
+    password: string;
+    rpassword: string;
+    oldpassword: string;
+}
+
 const StyledButton = styled(Button)({
     width: '200px',
     color: 'white',
@@ -19,30 +26,36 @@ const StyledButton = styled(Button)({
 
 export default function Settings({ user }: Props) {
     const [showChangePasswordForm, setShowChangePasswordForm] = React.useState<boolean>(false);
+    const [showDeleteAccountOption, setShowDeleteAccountOption] = React.useState<boolean>(false);
 
     return (
         <Box sx={{
-            p: '2rem',
+            p: '1rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '1rem',
-            minWidth: '250px',
-
+            gap: '5px',
+            width: 'fit-content',
         }} >
             <StyledButton variant='outlined' onClick={() => setShowChangePasswordForm(!showChangePasswordForm)}>Change password</StyledButton>
             <Collapse in={showChangePasswordForm}><ChangePasswordForm user={user} /></Collapse>
-            <StyledButton variant='outlined'>Delete Account</StyledButton>
+            <StyledButton variant='outlined' onClick={() => setShowDeleteAccountOption(!showDeleteAccountOption)}>Delete Account</StyledButton>
+            <Collapse in={showDeleteAccountOption}><DeleteAccount user={user} /></Collapse>
         </Box >
     )
 }
 
+
+
 function ChangePasswordForm({ user }: Props) {
-    const [password, setPassword] = React.useState<string>('');
+    const [passwordForm, setPasswordForm] = React.useState<Form>({ password: '', rpassword: '', oldpassword: '' });
     const [passwordCorrect, setPasswordCorrect] = React.useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = React.useState<string>('');
+    const [successMsg, setSuccessMsg] = React.useState<string>('');
     const isMobile = useIsMobile();
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setErrorMsg('');
         const body = {
             password: e.currentTarget.password.value,
             oldpassword: e.currentTarget.oldpassword.value,
@@ -52,11 +65,12 @@ function ChangePasswordForm({ user }: Props) {
 
         try {
             if (body.password !== e.currentTarget.rpassword.value) {
-                console.log('Repated password is not the same');
+                setErrorMsg('The passwords do not match')
             } else if (!passwordCorrect) {
-                console.log('password not valid');
+                setErrorMsg('Password not valid');
+            } else if (body.password === body.oldpassword) {
+                setErrorMsg('New password cannot be the same as the old one');
             } else {
-                console.log('password valid');
                 const res = await fetch('api/changePassword', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -65,9 +79,9 @@ function ChangePasswordForm({ user }: Props) {
                 if (res.status !== 200) {
                     console.log('password not changed');
                 } else {
-                    console.log('password changed');
+                    setSuccessMsg('Password changed successfully');
+                    setPasswordForm({ password: '', rpassword: '', oldpassword: '' });
                 }
-
             }
         }
         catch (error: any) {
@@ -79,7 +93,6 @@ function ChangePasswordForm({ user }: Props) {
         <Box sx={{
             display: isMobile ? 'block' : 'flex',
             gap: '1rem',
-
         }}>
             <Box component='form' onSubmit={handleSubmit} sx={(theme) => ({
                 display: 'flex',
@@ -92,8 +105,11 @@ function ChangePasswordForm({ user }: Props) {
             })}>
                 <TextField
                     label="Old Password"
-                    variant="outlined" type="password"
+                    variant="outlined"
+                    type="password"
                     name="oldpassword"
+                    value={passwordForm.oldpassword}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, oldpassword: e.target.value })}
                     required
                     sx={{ width: isMobile ? '100%' : '300px' }} />
                 <TextField
@@ -101,15 +117,18 @@ function ChangePasswordForm({ user }: Props) {
                     variant="outlined"
                     type="password"
                     name="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={passwordForm.password}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, password: e.target.value })}
                     required
                     sx={{ width: isMobile ? '100%' : '300px' }}
                 ></TextField>
                 <TextField
                     label="Repeat Password"
-                    variant="outlined" type="password"
+                    variant="outlined"
+                    type="password"
                     name="rpassword"
+                    value={passwordForm.rpassword}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, rpassword: e.target.value })}
                     required
                     sx={{ width: isMobile ? '100%' : '300px' }} />
                 <Button type='submit' variant='contained' sx={{
@@ -117,8 +136,11 @@ function ChangePasswordForm({ user }: Props) {
                 }}>
                     Submit
                 </Button>
+                {errorMsg
+                    ? <Collapse in={errorMsg !== ""} onClick={() => setErrorMsg('')}><Alert severity='error'>{errorMsg}</Alert></Collapse>
+                    : <Collapse in={successMsg !== ""} onClick={() => setSuccessMsg('')}><Alert severity='success'>{successMsg}</Alert></Collapse>}
             </Box>
-            <PassValidator password={password} passwordCorrect={setPasswordCorrect}></PassValidator>
+            <PassValidator password={passwordForm.password} passwordCorrect={setPasswordCorrect} ></PassValidator>
         </Box>
     )
 }
