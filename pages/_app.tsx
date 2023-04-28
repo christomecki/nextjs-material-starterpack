@@ -9,6 +9,9 @@ import { CurrentThemeProvider } from '@/lib/material/CurrentThemeProvider';
 
 import '../styles/globals.css';
 import { CookieNotice } from '@/components/cookieNotice';
+import { FeedbackMessage } from '@/components/FeedbackMessage';
+import { SnackbarProvider } from 'notistack';
+import { SnackbarCloseButton } from '@/components/SnackbarCloseButton';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -19,6 +22,7 @@ interface MyAppProps extends AppProps {
 
 export default function MyApp(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -26,6 +30,8 @@ export default function MyApp(props: MyAppProps) {
       </Head>
       <CurrentThemeProvider>
         <CssBaseline />
+        <SnackbarProvider preventDuplicate anchorOrigin={{ vertical: 'top', horizontal: 'center' }} action={(key) => <SnackbarCloseButton barKey={key} />} />
+        <FeedbackMessage />
         <Layout user={pageProps?.user}>
           <Component {...pageProps} />
         </Layout>
