@@ -3,11 +3,12 @@ import { findUserById, generateSaltAndHash, updateUser } from '@/lib/auth/user';
 import { feedbackUrlParam } from '@/lib/feedback';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+//if method is GET, redirect to a form. if method is POST, update the password
 export default async function resetPassword(req: NextApiRequest, res: NextApiResponse) {
   const { token } = req.query;
 
   if (typeof token !== 'string') {
-    res.status(400).end('Bad Request');
+    res.redirect(`/?${feedbackUrlParam('bad-request')}`);
     return;
   }
   try {
@@ -15,23 +16,22 @@ export default async function resetPassword(req: NextApiRequest, res: NextApiRes
 
     const user = await findUserById(payload.userId);
     if (user == null) {
-      res.status(400).end('Bad Request');
+      res.redirect(`/?${feedbackUrlParam('bad-request')}`);
       return;
     }
 
     if (user.chain !== payload.chainPrev) {
-      res.status(400).end('Bad Request');
+      res.redirect(`/?${feedbackUrlParam('link-expired')}`);
       return;
     }
 
-    //if method is GET, redirect to a form. if method is POST, update the password
     if (req.method === 'GET') {
       res.redirect(`/resetPasswordForm?token=${token}`);
       return;
     } else if (req.method === 'POST') {
       const newPassword = req.body.password;
       if (newPassword != null && typeof newPassword !== 'string') {
-        res.status(400).end('Bad Request');
+        res.redirect(`/?${feedbackUrlParam('bad-request')}`);
         return;
       }
       const { salt, hash } = generateSaltAndHash(newPassword);
@@ -44,6 +44,6 @@ export default async function resetPassword(req: NextApiRequest, res: NextApiRes
     }
   } catch (error: any) {
     console.error(error);
-    res.status(500).end('Bad Request');
+    res.redirect(`/?${feedbackUrlParam('unexpected-error')}`);
   }
 }

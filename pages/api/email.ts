@@ -7,7 +7,7 @@ export default async function email(req: NextApiRequest, res: NextApiResponse) {
   const { token } = req.query;
 
   if (typeof token !== 'string') {
-    res.status(400).end('Bad Request');
+    res.redirect(`/?${feedbackUrlParam('bad-request')}`);
     return;
   }
   try {
@@ -15,12 +15,12 @@ export default async function email(req: NextApiRequest, res: NextApiResponse) {
 
     const user = await findUserById(payload.userId);
     if (user == null) {
-      res.status(400).end('Bad Request');
+      res.redirect(`/?${feedbackUrlParam('bad-request')}`);
       return;
     }
 
     if (user.chain !== payload.chainPrev) {
-      res.status(400).end('Bad Request');
+      res.redirect(`/?${feedbackUrlParam('link-expired')}`);
       return;
     }
 
@@ -28,9 +28,9 @@ export default async function email(req: NextApiRequest, res: NextApiResponse) {
       chain: payload.chainNext,
     });
 
-    res.redirect(`/?${feedbackUrlParam('email-verified')}`);
+    res.redirect(`/login?${feedbackUrlParam('email-verified')}`);
   } catch (error: any) {
     console.error(error);
-    res.status(500).end(error.message);
+    res.redirect(`/?${feedbackUrlParam('unexpected-error')}`);
   }
 }

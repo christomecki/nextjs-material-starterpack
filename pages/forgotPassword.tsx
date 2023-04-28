@@ -4,6 +4,7 @@ import { getUserFromSession } from '@/lib/auth/user';
 import { Container, Stack, TextField, CircularProgress, Button } from '@mui/material';
 import Router from 'next/router';
 import { feedbackUrlParam } from '@/lib/feedback';
+import { FormPageWrapper } from '@/components/formPageWrapper';
 
 export default function ForgotPassword() {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -33,7 +34,7 @@ export default function ForgotPassword() {
   };
 
   return (
-    <Container maxWidth="sm">
+    <FormPageWrapper title="Forgot Password">
       <form onSubmit={onSubmit}>
         <Stack spacing={2}>
           <TextField disabled={isLoading} label="Email" variant="outlined" type="text" name="email" required />
@@ -43,7 +44,7 @@ export default function ForgotPassword() {
           </Button>
         </Stack>
       </form>
-    </Container>
+    </FormPageWrapper>
   );
 }
 

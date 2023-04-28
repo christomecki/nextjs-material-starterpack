@@ -28,6 +28,10 @@ export const FEEDBACKS = {
     text: 'You are already logged in.',
     type: 'warning',
   },
+  'link-expired': {
+    text: 'The link has expired.',
+    type: 'error',
+  },
 };
 
 export type FeedbackKey = keyof typeof FEEDBACKS;
