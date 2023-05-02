@@ -3,58 +3,65 @@ import { database } from '../mongodb';
 import { omit } from 'lodash';
 import { Session, getLoginSession } from './auth';
 import { RequestWithCookies } from './types';
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 
 export type User = {
   createdAt: number;
   email: string;
   hash: string;
   salt: string;
+  chain: string;
 };
 
-export type UserWithId = User & {
-  _id: string;
-};
+export type UserWithId = WithId<User>;
 
 export function userDto(user: User) {
-  return omit(user, ['hash', 'salt', '_id']) as Omit<User, 'hash' | 'salt' | '_id'>;
+  return omit(user, ['hash', 'salt', '_id', 'chain']) as Omit<User, 'hash' | 'salt' | '_id' | 'chain'>;
 }
 
 export type UserDto = ReturnType<typeof userDto>;
 
 const userCollection = database.collection<User>('user');
 
-export async function createUser(email: string, password: string) {
-  if (await findUser(email)) {
-    throw new Error('User already exists');
-  }
+export function generateSaltAndHash(password: string) {
   const salt = crypto.randomBytes(16).toString('hex');
   const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+  return { salt, hash };
+}
+
+export async function createUser(email: string, password: string): Promise<UserWithId> {
+  if (await findUserByEmail(email)) {
+    throw new Error('User already exists');
+  }
+  const { salt, hash } = generateSaltAndHash(password);
   const user: User = {
     createdAt: Date.now(),
     email: email.toLowerCase(),
     hash,
     salt,
+    chain: '0',
   };
 
-  await userCollection.insertOne(user);
+  const insertOneResult = await userCollection.insertOne(user);
 
-  return { email, createdAt: Date.now() };
+  return { ...user, _id: insertOneResult.insertedId };
 }
 
-export async function deleteUserAccount(user: UserWithId, password: string) {
-  const passwordsMatch = validatePassword(user, password);
-  if (!passwordsMatch) {
-    console.log('passwordsMatch: ', passwordsMatch);
-    return false;
-  }
-  await userCollection.deleteOne({ _id: new ObjectId(user._id) });
-  console.log('isDeleted: ');
-  return true;
+export async function deleteUserAccount(user: UserWithId) {
+  const res = await userCollection.deleteOne({ _id: new ObjectId(user._id) });
+  return res.deletedCount === 1;
 }
 
-export async function findUser(email: string) {
-  return userCollection.findOne<UserWithId>({ email: email.toLowerCase() });
+export async function findUserByEmail(email: string) {
+  return await userCollection.findOne<UserWithId>({ email: email.toLowerCase() });
+}
+
+export async function findUserById(id: string | ObjectId) {
+  return await userCollection.findOne({ _id: new ObjectId(id) });
+}
+
+export async function updateUser(id: string | ObjectId, update: Partial<User>) {
+  return await userCollection.updateOne({ _id: new ObjectId(id) }, { $set: update });
 }
 
 export function validatePassword(user: UserWithId, inputPassword: string) {
@@ -63,16 +70,25 @@ export function validatePassword(user: UserWithId, inputPassword: string) {
   return passwordsMatch;
 }
 
-export async function getUserFromSession(req: RequestWithCookies) {
+export async function getUserFromSession_BackendOnly(req: RequestWithCookies) {
   try {
     const session: Session = await getLoginSession(req);
     const user = (session && (await userCollection.findOne({ _id: new ObjectId(session.userId) }))) ?? null;
+    return user;
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function getUserFromSession(req: RequestWithCookies) {
+  try {
+    const user = await getUserFromSession_BackendOnly(req);
     if (user == null) {
-      return undefined;
+      return null;
     }
     return userDto(user);
   } catch (error) {
-    return undefined;
+    return null;
   }
 }
 

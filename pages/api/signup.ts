@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createUser, isValidEmailAddress } from '@/lib/auth/user';
-import passwordValidation from '@/lib/passValidation/passwordValidaton';
+import { sendVerificationEmail } from '@/lib/auth/emailVerification';
+import { isPasswordValid } from '@/lib/passValidation/passwordValidaton';
 
 export default async function signup(req: NextApiRequest, res: NextApiResponse) {
   const returnError = (error: any) => {
@@ -12,8 +13,10 @@ export default async function signup(req: NextApiRequest, res: NextApiResponse) 
     if (typeof req.body === 'object') {
       const { email, password } = req.body;
 
-      if (email != null && isValidEmailAddress(email) && passwordValidation(password).every((x) => x === true)) {
-        await createUser(email, password);
+      if (email != null && isValidEmailAddress(email) && isPasswordValid(password)) {
+        const newUser = await createUser(email, password);
+        sendVerificationEmail(newUser); //no await
+
         res.status(200).send({ done: true });
         return;
       }
