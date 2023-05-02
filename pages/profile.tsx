@@ -1,55 +1,77 @@
-import React from "react";
-import { GetServerSideProps } from "next";
-import { getUserFromSession, UserDto } from "@/lib/auth/user";
-import { Box, Stack } from "@mui/material";
+import React from 'react';
+import { GetServerSideProps } from 'next';
+import { getUserFromSession, UserDto } from '@/lib/auth/user';
+import { Box, Button, Stack } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
-import CustomButton from "@/components/CustomButton";
+// import CustomButton from '@/components/CustomButton';
 import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
-import InfoBox from '@/components/infoBox'
-import Settings from "@/components/settings";
-import { useIsMobile } from "@/lib/material/useIsMobile";
+import InfoBox from '@/components/profile/infoBox';
+import Settings from '@/components/profile/settings';
+import { useIsMobile } from '@/lib/material/useIsMobile';
 
 type Props = {
   user: UserDto;
 };
 
+type TabsItem = {
+  icon: JSX.Element;
+  label: string;
+  component?: React.FC<{ user: UserDto }>;
+};
+
+const TABS: Array<TabsItem> = [
+  { icon: <InfoIcon />, label: 'Info', component: InfoBox },
+  { icon: <SettingsIcon />, label: 'Settings', component: Settings },
+];
+
 export default function Profile({ user }: Props) {
   const isMobile = useIsMobile();
-  const MenuButtons = [
-    { icon: <InfoIcon />, label: 'Info', component: <InfoBox user={user} /> },
-    { icon: <SettingsIcon />, label: 'Settings', component: <Settings user={user} /> },
-    { icon: <LogoutIcon />, label: 'Logout all sessions' },
-  ]
-  const [activeButton, setActiveButton] = React.useState<string>('Info');
+
+  const [active, setActive] = React.useState(0);
+
+  const ActiveComponent = TABS[active].component;
 
   return (
-    <Box sx={{
-      margin: 'auto',
-      mt: '2vh',
-      width: isMobile ? '100%' : '80%',
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      '@media (max-width: 1050px)': {
-        width: '100%',
-      },
-    }}>
-      <Box sx={{
+    <Box
+      sx={{
+        margin: 'auto',
+        mt: '2vh',
+        width: isMobile ? '100%' : '80%',
         display: 'flex',
-        flexDirection: 'column',
-        width: isMobile ? '100%' : '20%',
-      }}>
-        <Stack >
-          {MenuButtons.map((item) => (<CustomButton key={item.label} startIcon={item.icon} label={item.label} onClick={setActiveButton}>{item.label}</CustomButton>))}
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        '@media (max-width: 1050px)': {
+          width: '100%',
+        },
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: isMobile ? '100%' : '20%',
+        }}
+      >
+        <Stack>
+          {TABS.map((item, index) => (
+            <Button
+              sx={{ justifyContent: 'right' }}
+              key={index}
+              startIcon={item.icon}
+              onClick={() => setActive(index)}
+              variant={index === active ? 'contained' : 'text'}
+            >
+              {item.label}
+            </Button>
+          ))}
         </Stack>
       </Box>
-      <Box sx={{
-        width: isMobile ? '100%' : 'fit-content',
-      }}>
-        {MenuButtons.map((item) => (
-          activeButton === item.label ? item.component : null
-        ))}
+      <Box
+        sx={{
+          width: isMobile ? '100%' : 'fit-content',
+        }}
+      >
+        {ActiveComponent ? <ActiveComponent user={user} /> : null}
       </Box>
     </Box>
   );
@@ -60,7 +82,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req }) => 
   if (!user) {
     return {
       redirect: {
-        destination: "/login",
+        destination: '/login',
         permanent: false,
       },
     };
@@ -71,6 +93,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req }) => 
       user,
     },
   };
-
 };
-

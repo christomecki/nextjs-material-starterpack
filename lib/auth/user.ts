@@ -15,8 +15,14 @@ export type User = {
 
 export type UserWithId = WithId<User>;
 
+export const STARTING_CHAIN = '0';
+
 export function userDto(user: User) {
-  return omit(user, ['hash', 'salt', '_id', 'chain']) as Omit<User, 'hash' | 'salt' | '_id' | 'chain'>;
+  const safeFields = omit(user, ['hash', 'salt', '_id', 'chain']) as Omit<User, 'hash' | 'salt' | '_id' | 'chain'>;
+  return {
+    ...safeFields,
+    emailConfirmed: user.chain !== STARTING_CHAIN,
+  };
 }
 
 export type UserDto = ReturnType<typeof userDto>;
@@ -39,7 +45,7 @@ export async function createUser(email: string, password: string): Promise<UserW
     email: email.toLowerCase(),
     hash,
     salt,
-    chain: '0',
+    chain: STARTING_CHAIN,
   };
 
   const insertOneResult = await userCollection.insertOne(user);
