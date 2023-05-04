@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActions, CardContent, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
 export default function LogoutAllSession() {
   return (
@@ -10,7 +10,7 @@ export default function LogoutAllSession() {
         This will log you out from all devices and you will have to login again.
       </Typography>
 
-      <Button variant="contained" color="warning" size="small">
+      <Button variant="contained" color="warning" size="small" href="/api/logoutAllSessions">
         Logout
       </Button>
     </Box>
