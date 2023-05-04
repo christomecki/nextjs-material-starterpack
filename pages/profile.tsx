@@ -1,79 +1,66 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
 import { getUserFromSession, UserDto } from '@/lib/auth/user';
-import { Box, Button, Stack } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
-// import CustomButton from '@/components/CustomButton';
-import SettingsIcon from '@mui/icons-material/Settings';
-import InfoBox from '@/components/profile/infoBox';
-import Settings from '@/components/profile/settings';
-import { useIsMobile } from '@/lib/material/useIsMobile';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Container, Divider, Typography } from '@mui/material';
+import InfoBox from '@/components/profile/ProfileInfo';
+import LogoutAllSession from '@/components/profile/LogoutAllSessions';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChangePasswordForm from '@/components/changePasswordForm';
+import DeleteAccount from '@/components/deleteAccount';
 
 type Props = {
   user: UserDto;
 };
 
-type TabsItem = {
-  icon: JSX.Element;
-  label: string;
-  component?: React.FC<{ user: UserDto }>;
-};
-
-const TABS: Array<TabsItem> = [
-  { icon: <InfoIcon />, label: 'Info', component: InfoBox },
-  { icon: <SettingsIcon />, label: 'Settings', component: Settings },
-];
+type AccordionPanels = 'changePassword' | 'logoutAllSessions' | 'deleteAccount';
 
 export default function Profile({ user }: Props) {
-  const isMobile = useIsMobile();
-
-  const [active, setActive] = React.useState(0);
-
-  const ActiveComponent = TABS[active].component;
+  const [expanded, setExpanded] = React.useState<AccordionPanels | false>(false);
 
   return (
-    <Box
-      sx={{
-        margin: 'auto',
-        mt: '2vh',
-        width: isMobile ? '100%' : '80%',
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        '@media (max-width: 1050px)': {
-          width: '100%',
-        },
-      }}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: isMobile ? '100%' : '20%',
-        }}
-      >
-        <Stack>
-          {TABS.map((item, index) => (
-            <Button
-              sx={{ justifyContent: 'right' }}
-              key={index}
-              startIcon={item.icon}
-              onClick={() => setActive(index)}
-              variant={index === active ? 'contained' : 'text'}
-            >
-              {item.label}
-            </Button>
-          ))}
-        </Stack>
+    <Container sx={{ mt: 2 }}>
+      <InfoBox user={user} />
+
+      <Divider sx={{ my: 2 }} />
+      <Typography variant="h5" sx={{ mb: 2 }}>
+        Actions:
+      </Typography>
+      <Box>
+        <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="changePassword" title="Change password">
+          <ChangePasswordForm user={user} />
+        </AccordionPanel>
+
+        <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="logoutAllSessions" title="Logout from all sessions">
+          <LogoutAllSession />
+        </AccordionPanel>
+
+        <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="deleteAccount" title="Delete account">
+          <DeleteAccount />
+        </AccordionPanel>
       </Box>
-      <Box
-        sx={{
-          width: isMobile ? '100%' : 'fit-content',
-        }}
-      >
-        {ActiveComponent ? <ActiveComponent user={user} /> : null}
-      </Box>
-    </Box>
+    </Container>
+  );
+}
+
+function AccordionPanel({
+  name,
+  title,
+  children,
+  expanded,
+  setExpanded,
+}: React.PropsWithChildren<{
+  name: AccordionPanels;
+  title: string;
+  expanded: AccordionPanels | false;
+  setExpanded: (panel: AccordionPanels | false) => void;
+}>) {
+  return (
+    <Accordion expanded={expanded === name} onChange={(_, isExpanded) => setExpanded(isExpanded ? name : false)}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant="button">{title}</Typography>
+      </AccordionSummary>
+      <AccordionDetails>{children}</AccordionDetails>
+    </Accordion>
   );
 }
 

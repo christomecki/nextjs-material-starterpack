@@ -1,4 +1,3 @@
-import { useIsMobile } from '@/lib/material/useIsMobile';
 import { Alert, Box, Button, Collapse, TextField, Typography } from '@mui/material';
 import Router from 'next/router';
 import React, { FormEvent } from 'react';
@@ -6,7 +5,6 @@ import React, { FormEvent } from 'react';
 export default function DeleteAccount() {
   const [password, setPassword] = React.useState<string>('');
   const [errorMsg, setErrorMsg] = React.useState<string>('');
-  const isMobile = useIsMobile();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,7 +36,6 @@ export default function DeleteAccount() {
         borderColor: theme.palette.divider,
         borderRadius: '5px',
         padding: '1rem',
-        width: isMobile ? '100%' : '350px',
       })}
     >
       <Typography>Enter your password to delete account permanently</Typography>
@@ -51,7 +48,6 @@ export default function DeleteAccount() {
           gap: '1rem',
           pt: '1rem',
           pb: '1rem',
-          width: isMobile ? '100%' : '300px',
         }}
       >
         <TextField
@@ -62,18 +58,9 @@ export default function DeleteAccount() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          sx={{
-            width: isMobile ? '100%' : '300px',
-          }}
+          sx={{}}
         ></TextField>
-        <Button
-          variant="contained"
-          type="submit"
-          color="error"
-          sx={{
-            width: isMobile ? '100%' : '300px',
-          }}
-        >
+        <Button variant="contained" type="submit" color="error" sx={{ width: 'max-content' }}>
           DELETE ACCOUNT
         </Button>
       </Box>

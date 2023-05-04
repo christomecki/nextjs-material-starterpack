@@ -1,6 +1,5 @@
 import Iron from '@hapi/iron';
-import { UserWithId } from './user';
-import { v4 as uuidv4 } from 'uuid';
+import { UserWithId, generateNextChain } from './user';
 
 export type EmailVerificationPayload = {
   userId: string;
@@ -28,7 +27,7 @@ export const emailTokenGenerator = (secret: string, maxAge: number) => ({
       createdAt: Date.now(),
       maxAge: maxAge,
       chainPrev: user.chain,
-      chainNext: uuidv4(),
+      chainNext: generateNextChain(),
     };
     const token = await Iron.seal(payload, secret, Iron.defaults);
     return token;

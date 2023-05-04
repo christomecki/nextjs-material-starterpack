@@ -4,6 +4,7 @@ import { omit } from 'lodash';
 import { Session, getLoginSession } from './auth';
 import { RequestWithCookies } from './types';
 import { ObjectId, WithId } from 'mongodb';
+import { v4 as uuidv4 } from 'uuid';
 
 export type User = {
   createdAt: number;
@@ -80,6 +81,9 @@ export async function getUserFromSession_BackendOnly(req: RequestWithCookies) {
   try {
     const session: Session = await getLoginSession(req);
     const user = (session && (await userCollection.findOne({ _id: new ObjectId(session.userId) }))) ?? null;
+    if (user != null && user.chain !== session.chain) {
+      return null;
+    }
     return user;
   } catch (error) {
     return null;
@@ -100,4 +104,8 @@ export async function getUserFromSession(req: RequestWithCookies) {
 
 export function isValidEmailAddress(emailAddress: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
+}
+
+export function generateNextChain() {
+  return uuidv4();
 }

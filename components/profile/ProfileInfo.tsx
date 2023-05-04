@@ -7,13 +7,12 @@ type Props = {
   user: UserDto;
 };
 
-export default function InfoBox({ user }: Props) {
+export default function ProfileInfo({ user }: Props) {
   const isMobile = useIsMobile();
   return (
     <Box
       sx={{
-        p: '2rem',
-        width: isMobile ? '100%' : '1200px',
+        p: 1,
       }}
     >
       <Typography variant="h4">Your profile details</Typography>
