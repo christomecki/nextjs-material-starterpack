@@ -3,7 +3,8 @@ import { database } from '../mongodb';
 import { omit } from 'lodash';
 import { Session, getLoginSession } from './auth';
 import { RequestWithCookies } from './types';
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
+import { v4 as uuidv4 } from 'uuid';
 
 export type User = {
   createdAt: number;
@@ -13,12 +14,20 @@ export type User = {
   chain: string;
 };
 
-export type UserWithId = User & {
-  _id: string;
-};
+export type UserWithId = WithId<User>;
+
+export const STARTING_CHAIN = '0';
+
+export function isUserConfirmedEmail(user: User) {
+  return user.chain !== STARTING_CHAIN;
+}
 
 export function userDto(user: User) {
-  return omit(user, ['hash', 'salt', '_id', 'chain']) as Omit<User, 'hash' | 'salt' | '_id' | 'chain'>;
+  const safeFields = omit(user, ['hash', 'salt', '_id', 'chain']) as Omit<User, 'hash' | 'salt' | '_id' | 'chain'>;
+  return {
+    ...safeFields,
+    emailConfirmed: isUserConfirmedEmail(user),
+  };
 }
 
 export type UserDto = ReturnType<typeof userDto>;
@@ -41,12 +50,17 @@ export async function createUser(email: string, password: string): Promise<UserW
     email: email.toLowerCase(),
     hash,
     salt,
-    chain: '0',
+    chain: STARTING_CHAIN,
   };
 
   const insertOneResult = await userCollection.insertOne(user);
 
-  return { ...user, _id: String(insertOneResult.insertedId) };
+  return { ...user, _id: insertOneResult.insertedId };
+}
+
+export async function deleteUserAccount(user: UserWithId) {
+  const res = await userCollection.deleteOne({ _id: new ObjectId(user._id) });
+  return res.deletedCount === 1;
 }
 
 export async function findUserByEmail(email: string) {
@@ -67,19 +81,35 @@ export function validatePassword(user: UserWithId, inputPassword: string) {
   return passwordsMatch;
 }
 
-export async function getUserFromSession(req: RequestWithCookies) {
+export async function getUserFromSession_BackendOnly(req: RequestWithCookies) {
   try {
     const session: Session = await getLoginSession(req);
     const user = (session && (await userCollection.findOne({ _id: new ObjectId(session.userId) }))) ?? null;
+    if (user != null && user.chain !== session.chain) {
+      return null;
+    }
+    return user;
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function getUserFromSession(req: RequestWithCookies) {
+  try {
+    const user = await getUserFromSession_BackendOnly(req);
     if (user == null) {
-      return undefined;
+      return null;
     }
     return userDto(user);
   } catch (error) {
-    return undefined;
+    return null;
   }
 }
 
 export function isValidEmailAddress(emailAddress: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
+}
+
+export function generateNextChain() {
+  return uuidv4();
 }

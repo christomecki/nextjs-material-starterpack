@@ -6,6 +6,7 @@ const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
 export type SessionData = {
   userId: string;
+  chain: string;
 };
 
 export type Session = SessionData & {

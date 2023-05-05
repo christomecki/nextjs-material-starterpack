@@ -23,9 +23,10 @@ export default nextConnect<NextApiRequest, NextApiResponse>()
   .post(async (req, res) => {
     try {
       const user = await authenticate('local', req, res);
-      // session is the payload to save in the token, it may contain basic info about the user
+
       const session: SessionData = {
         userId: String(user._id),
+        chain: user.chain,
       };
 
       await setLoginSession(res, session);
