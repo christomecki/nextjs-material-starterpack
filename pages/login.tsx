@@ -2,9 +2,8 @@ import { FormEvent, useState } from 'react';
 import Router from 'next/router';
 import { GetServerSideProps } from 'next';
 import { getUserFromSession } from '@/lib/auth/user';
-import { Alert, Box, Button, CircularProgress, Container, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import Link from '@mui/material/Link';
 import { FormPageWrapper } from '@/components/formPageWrapper';
 
 export default function Login() {
