@@ -17,11 +17,11 @@ export function LoginDetails({ user }: Props) {
                 flexDirection: 'column',
             }}
         >
-            <Typography variant="h5">Last login: </Typography>
+            <Typography variant="h5" sx={{ mb: '10px' }}>Last login: </Typography>
             <DataRow text="Time:" value={lastLoginFormattedDate} />
             <DataRow text="Address IP:" value={user.lastLogin.ip} />
-            <Divider sx={{ my: 1 }} />
-            <Typography variant="h5" >Last failed login: </Typography>
+            <Divider sx={{ my: 1, mb: '20px' }} />
+            <Typography variant="h5" sx={{ mb: '10px' }}>Last failed login: </Typography>
             <DataRow text="Time:" value={lastFailedLoginFormattedDate} />
             <DataRow text="Address IP:" value={user.lastFailedLogin.ip} />
             <DataRow text="User agent:" value={user.lastFailedLogin.userAgent} />
@@ -48,9 +48,10 @@ function DataRow(props: { text: string, value: string }) {
             sx={{
                 display: 'flex',
                 gap: '20px',
+                mb: '5px',
             }}
         >
-            <Typography sx={{ fontWeight: '800', color: 'text.secondary' }}>{props.text}</Typography>
+            <Typography sx={{ fontWeight: '800', color: 'text.secondary', minWidth: '100px' }}>{props.text}</Typography>
             <Typography>{props.value}</Typography>
         </Box>
     )
