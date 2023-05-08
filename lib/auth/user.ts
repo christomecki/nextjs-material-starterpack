@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { userAgent } from 'next/server';
 import { database } from '../mongodb';
 import { omit } from 'lodash';
 import { Session, getLoginSession } from './auth';

@@ -1,6 +1,4 @@
-import { NextApiRequest } from 'next';
 import smtp from '../smtp';
-import { lastFailedLoginAttempt } from './user';
 
 const RESET_PASSWORD_SECRET = process.env.RESET_PASSWORD_SECRET;
 const EMAIL_FROM = process.env.EMAIL_FROM;
