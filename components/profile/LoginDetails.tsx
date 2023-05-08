@@ -17,14 +17,14 @@ export function LoginDetails({ user }: Props) {
                 flexDirection: 'column',
             }}
         >
-            <Typography variant="h6">Last login: </Typography>
-            <Typography >Time: {lastLoginFormattedDate}</Typography>
-            <Typography >Address IP: {user.lastLogin.ip}</Typography>
+            <Typography variant="h5">Last login: </Typography>
+            <DataRow text="Time:" value={lastLoginFormattedDate} />
+            <DataRow text="Address IP:" value={user.lastLogin.ip} />
             <Divider sx={{ my: 1 }} />
-            <Typography variant="h6">Last failed login: </Typography>
-            <Typography >Time: {lastFailedLoginFormattedDate}</Typography>
-            <Typography >Address IP: {user.lastFailedLogin.ip}</Typography>
-            <Typography >User agent: {user.lastFailedLogin.userAgent}</Typography>
+            <Typography variant="h5" >Last failed login: </Typography>
+            <DataRow text="Time:" value={lastFailedLoginFormattedDate} />
+            <DataRow text="Address IP:" value={user.lastFailedLogin.ip} />
+            <DataRow text="User agent:" value={user.lastFailedLogin.userAgent} />
         </Box>
     )
 }
@@ -40,4 +40,18 @@ function formatDate(date: Date) {
         second: 'numeric',
         timeZoneName: 'short'
     });
+}
+
+function DataRow(props: { text: string, value: string }) {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                gap: '20px',
+            }}
+        >
+            <Typography sx={{ fontWeight: '800', color: 'text.secondary' }}>{props.text}</Typography>
+            <Typography>{props.value}</Typography>
+        </Box>
+    )
 }
