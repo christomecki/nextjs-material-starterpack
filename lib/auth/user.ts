@@ -97,7 +97,6 @@ export async function lastLoginAttempt(request: NextApiRequest) {
     return null;
   }
   const ip = request.socket.remoteAddress;
-  console.log('🚀 ~ file: user.ts:100 ~ lastLoginAttempt ~ ip:', ip);
   const timestamp = new Date().toISOString();
   const update = {
     $set: {
