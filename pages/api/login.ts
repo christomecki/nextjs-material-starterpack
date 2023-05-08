@@ -3,7 +3,7 @@ import nextConnect from 'next-connect';
 import { localStrategy } from '@/lib/auth/password-local';
 import { SessionData, setLoginSession } from '@/lib/auth/auth';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { UserWithId } from '@/lib/auth/user';
+import { UserWithId, lastFailedLoginAttempt, lastLoginAttempt } from '@/lib/auth/user';
 import { wrongPasswordAlert } from '@/lib/auth/securityAlert';
 
 const authenticate = (method: string, req: NextApiRequest, res: NextApiResponse): Promise<UserWithId> =>
@@ -31,11 +31,12 @@ export default nextConnect<NextApiRequest, NextApiResponse>()
       };
 
       await setLoginSession(res, session);
-
+      lastLoginAttempt(req);
       res.status(200).send({ done: true });
     } catch (error: any) {
       console.error(error);
       wrongPasswordAlert(req.body.email);
+      lastFailedLoginAttempt(req);
       res.status(401).send(error.message);
     }
   });

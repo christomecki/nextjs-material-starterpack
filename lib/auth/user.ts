@@ -1,10 +1,12 @@
 import crypto from 'crypto';
+import { userAgent } from 'next/server';
 import { database } from '../mongodb';
 import { omit } from 'lodash';
 import { Session, getLoginSession } from './auth';
 import { RequestWithCookies } from './types';
 import { ObjectId, WithId } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
+import { NextApiRequest } from 'next';
 
 export type User = {
   createdAt: number;
@@ -12,6 +14,15 @@ export type User = {
   hash: string;
   salt: string;
   chain: string;
+  lastLogin: {
+    timestamp: string;
+    ip: string;
+  };
+  lastFailedLogin: {
+    timestamp: string;
+    ip: string;
+    userAgent: string;
+  };
 };
 
 export type UserWithId = WithId<User>;
@@ -47,6 +58,15 @@ export async function createUser(email: string, password: string): Promise<UserW
     hash,
     salt,
     chain: STARTING_CHAIN,
+    lastLogin: {
+      timestamp: new Date().toString(),
+      ip: '',
+    },
+    lastFailedLogin: {
+      timestamp: new Date().toString(),
+      ip: '',
+      userAgent: '',
+    },
   };
 
   const insertOneResult = await userCollection.insertOne(user);
@@ -69,6 +89,45 @@ export async function findUserById(id: string | ObjectId) {
 
 export async function updateUser(id: string | ObjectId, update: Partial<User>) {
   return await userCollection.updateOne({ _id: new ObjectId(id) }, { $set: update });
+}
+
+export async function lastLoginAttempt(request: NextApiRequest) {
+  const user = await findUserByEmail(request.body.email);
+  if (user == null) {
+    return null;
+  }
+  const ip = request.socket.remoteAddress;
+  console.log('🚀 ~ file: user.ts:100 ~ lastLoginAttempt ~ ip:', ip);
+  const timestamp = new Date().toISOString();
+  const update = {
+    $set: {
+      lastLogin: {
+        timestamp,
+        ip: ip ?? '',
+      },
+    },
+  };
+  console.log('userAgent: ', request.headers['user-agent']);
+  return await userCollection.updateOne({ _id: new ObjectId(user._id) }, update);
+}
+
+export async function lastFailedLoginAttempt(request: NextApiRequest) {
+  const user = await findUserByEmail(request.body.email);
+  if (user == null) {
+    return null;
+  }
+  const ip = request.socket.remoteAddress;
+  const timestamp = new Date().toISOString();
+  const update = {
+    $set: {
+      lastFailedLogin: {
+        timestamp,
+        ip: ip ?? '',
+        userAgent: request.headers['user-agent'] ?? '',
+      },
+    },
+  };
+  return await userCollection.updateOne({ _id: new ObjectId(user._id) }, update);
 }
 
 export function validatePassword(user: UserWithId, inputPassword: string) {
