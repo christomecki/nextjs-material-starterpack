@@ -1,5 +1,6 @@
 import { sendResetPasswordEmail } from '@/lib/auth/resetPassword';
-import { findUserByEmail, isUserConfirmedEmail, isValidEmailAddress } from '@/lib/auth/user';
+import { findUserByEmail, isUserConfirmedEmail } from '@/lib/auth/user';
+import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function forgotPassword(req: NextApiRequest, res: NextApiResponse) {

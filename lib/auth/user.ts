@@ -106,10 +106,6 @@ export async function getUserFromSession(req: RequestWithCookies) {
   }
 }
 
-export function isValidEmailAddress(emailAddress: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
-}
-
 export function generateNextChain() {
   return uuidv4();
 }

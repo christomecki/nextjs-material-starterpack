@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { User, findUserByEmail, isValidEmailAddress } from '@/lib/auth/user';
+import { User, findUserByEmail } from '@/lib/auth/user';
+import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import passwordValidation from '@/lib/passValidation/passwordValidaton';
 import crypto from 'crypto';
 import { database } from '@/lib/mongodb';
