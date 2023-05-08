@@ -1,29 +1,38 @@
-import { FormEvent, useState } from 'react';
+import React, { useState } from 'react';
 import Router from 'next/router';
 import { GetServerSideProps } from 'next';
 import { getUserFromSession } from '@/lib/auth/user';
-import { Alert, Box, Button, CircularProgress, Container, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import Link from '@mui/material/Link';
 import { FormPageWrapper } from '@/components/formPageWrapper';
+import { useForm } from 'react-hook-form';
+import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
+import { fieldRegisterWrapper } from '@/lib/material/fieldRegisterWrapper';
+
+type FormData = {
+  email: string;
+  password: string;
+};
 
 export default function Login() {
   const [errorMsg, setErrorMsg] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({});
 
+  const onSubmit = handleSubmit(async (data) => {
     if (errorMsg) setErrorMsg('');
 
     try {
-      setIsLoading(true);
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: e.currentTarget.email.value,
-          password: e.currentTarget.password.value,
+          email: data.email,
+          password: data.password,
         }),
       });
       if (res.status === 200) {
@@ -34,23 +43,43 @@ export default function Login() {
     } catch (error: any) {
       console.error('An unexpected error happened occurred:', error);
       setErrorMsg(error.message);
-    } finally {
-      setIsLoading(false);
     }
-  };
+  });
+
+  const field = fieldRegisterWrapper(register, errors);
 
   return (
     <FormPageWrapper title="Sign in">
       <form onSubmit={onSubmit}>
         <Stack spacing={2}>
-          <TextField label="Email" variant="outlined" type="text" name="email" required />
-          <TextField label="Password" variant="outlined" type="password" name="password" required />
+          <TextField
+            label="Email"
+            variant="outlined"
+            {...field('email', {
+              required: {
+                value: true,
+                message: 'Email is required',
+              },
+              validate: (value) => isValidEmailAddress(value) || 'Email is not valid',
+            })}
+          />
+          <TextField
+            label="Password"
+            variant="outlined"
+            type="password"
+            {...field('password', {
+              required: {
+                value: true,
+                message: 'Password is required',
+              },
+            })}
+          />
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button href="forgotPassword">Forgot password?</Button>
 
-            <Button type="submit" variant="contained" color="success" disabled={isLoading}>
-              {isLoading && <CircularProgress size={'sm'} />}
+            <Button type="submit" variant="contained" color="success" disabled={isSubmitting}>
+              {isSubmitting && <CircularProgress size={'sm'} />}
               Login
             </Button>
           </Box>
