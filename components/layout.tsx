@@ -7,19 +7,19 @@ import ErrorBoundary from './ErrorBoundary';
 export default function Layout({ children, user }: React.PropsWithChildren<{ user: UserDto | undefined | null }>) {
   return (
     <>
-      <Box sx={{ minHeight: `calc(100vh - ${FOOTER_HEIGHT}px)` }}>
-        <header>
-          <Header user={user} />
-        </header>
-        <main>
-          <ErrorBoundary>
-            <Box sx={{ position: 'relative', padding: 0 }}>{children}</Box>
-          </ErrorBoundary>
-        </main>
-      </Box>
-      <footer>
-        <Footer />
-      </footer>
+      <ErrorBoundary>
+        <Box sx={{ minHeight: `calc(100vh - ${FOOTER_HEIGHT}px)` }}>
+          <header>
+            <Header user={user} />
+          </header>
+          <main>
+              <Box sx={{ position: 'relative', padding: 0 }}>{children}</Box>
+          </main>
+        </Box>
+        <footer>
+          <Footer />
+        </footer>
+      </ErrorBoundary>
     </>
   );
 }
