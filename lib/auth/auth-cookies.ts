@@ -1,5 +1,5 @@
 import { serialize, parse } from 'cookie';
-import { NextApiResponse, NextApiRequest } from 'next';
+import { NextApiResponse } from 'next';
 import { RequestWithCookies } from './types';
 
 const TOKEN_NAME = 'token';

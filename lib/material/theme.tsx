@@ -1,7 +1,6 @@
 import { forwardRef } from 'react';
 import { Roboto } from '@next/font/google';
-import { createTheme, PaletteOptions, ThemeOptions } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
+import { createTheme, ThemeOptions } from '@mui/material/styles';
 import { merge } from 'lodash';
 import NextLink from 'next/link';
 import { LinkProps as MuiLinkProps } from '@mui/material/Link';
