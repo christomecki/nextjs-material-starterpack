@@ -5,6 +5,7 @@ import { getUserFromSession } from '@/lib/auth/user';
 import { Alert, Box, Button, CircularProgress, Link, Stack, TextField } from '@mui/material';
 import PassValidator from '@/components/passValidator';
 import { FormPageWrapper } from '@/components/formPageWrapper';
+import { feedbackUrlParam } from '@/lib/feedback';
 
 export default function Signup() {
   const [errorMsg, setErrorMsg] = useState('');
@@ -35,7 +36,7 @@ export default function Signup() {
           body: JSON.stringify(body),
         });
         if (res.status === 200) {
-          Router.push('/login');
+          Router.push(`/login?${feedbackUrlParam('account-created')}`);
         } else {
           throw new Error(await res.text());
         }

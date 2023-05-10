@@ -32,7 +32,7 @@ export default function Login() {
       }
     } catch (error: any) {
       console.error('An unexpected error happened occurred:', error);
-      setErrorMsg(error.message);
+      setErrorMsg('Invalid credentials');
     } finally {
       setIsLoading(false);
     }
@@ -46,7 +46,9 @@ export default function Login() {
           <TextField label="Password" variant="outlined" type="password" name="password" required />
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Link style={{textDecoration: 'none'}} href="forgotPassword">Forgot password?</Link>
+            <Link style={{ textDecoration: 'none' }} href="forgotPassword">
+              Forgot password?
+            </Link>
 
             <Button type="submit" variant="contained" color="success" disabled={isLoading}>
               {isLoading && <CircularProgress size={'sm'} />}
@@ -56,7 +58,7 @@ export default function Login() {
 
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, px: 2, py: 1, borderRadius: 1 }}>
             <Typography sx={{ my: 'auto' }}>New to our platform?</Typography>
-            <Link style={{textDecoration: 'none'}} href="/signup">
+            <Link style={{ textDecoration: 'none' }} href="/signup">
               Create an account!
             </Link>
           </Box>

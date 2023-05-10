@@ -1,6 +1,6 @@
 import passport from 'passport';
 import nextConnect from 'next-connect';
-import { localStrategy } from '@/lib/auth/password-local';
+import { InvalidEmailPasswordCombination, localStrategy } from '@/lib/auth/password-local';
 import { SessionData, setLoginSession } from '@/lib/auth/auth';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { UserWithId } from '@/lib/auth/user';
@@ -33,7 +33,12 @@ export default nextConnect<NextApiRequest, NextApiResponse>()
 
       res.status(200).send({ done: true });
     } catch (error: any) {
-      console.error(error);
-      res.status(401).send(error.message);
+      if (error instanceof InvalidEmailPasswordCombination) {
+        console.log('InvalidEmailPasswordCombination');
+      } else {
+        console.error(error);
+      }
+
+      res.status(401).send('Unauthorized');
     }
   });
