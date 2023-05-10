@@ -5,7 +5,6 @@ import { Session, getLoginSession } from './auth';
 import { RequestWithCookies } from './types';
 import { ObjectId, WithId } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
-import { NextApiRequest } from 'next';
 
 export type User = {
   createdAt: number;
