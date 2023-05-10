@@ -90,44 +90,6 @@ export async function updateUser(id: string | ObjectId, update: Partial<User>) {
   return await userCollection.updateOne({ _id: new ObjectId(id) }, { $set: update });
 }
 
-export async function lastLoginAttempt(request: NextApiRequest) {
-  const user = await findUserByEmail(request.body.email);
-  if (user == null) {
-    return null;
-  }
-  const ip = request.socket.remoteAddress;
-  const timestamp = new Date().toISOString();
-  const update = {
-    $set: {
-      lastLogin: {
-        timestamp,
-        ip: ip ?? '',
-      },
-    },
-  };
-  console.log('userAgent: ', request.headers['user-agent']);
-  return await userCollection.updateOne({ _id: new ObjectId(user._id) }, update);
-}
-
-export async function lastFailedLoginAttempt(request: NextApiRequest) {
-  const user = await findUserByEmail(request.body.email);
-  if (user == null) {
-    return null;
-  }
-  const ip = request.socket.remoteAddress;
-  const timestamp = new Date().toISOString();
-  const update = {
-    $set: {
-      lastFailedLogin: {
-        timestamp,
-        ip: ip ?? '',
-        userAgent: request.headers['user-agent'] ?? '',
-      },
-    },
-  };
-  return await userCollection.updateOne({ _id: new ObjectId(user._id) }, update);
-}
-
 export function validatePassword(user: UserWithId, inputPassword: string) {
   const inputHash = crypto.pbkdf2Sync(inputPassword, user.salt, 1000, 64, 'sha512').toString('hex');
   const passwordsMatch = user.hash === inputHash;
