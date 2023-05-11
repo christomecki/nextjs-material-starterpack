@@ -3,7 +3,7 @@ import React, { FormEvent } from 'react';
 import { Alert, Box, Button, Grid, Stack, TextField } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
 import { useIsMobile } from '@/lib/material/useIsMobile';
-import PassValidator from './passValidator';
+import PassValidator from './PassValidator';
 
 type Props = {
   user: UserDto;
@@ -30,7 +30,6 @@ export default function ChangePasswordForm({ user }: Props) {
       oldpassword: e.currentTarget.oldpassword.value,
       email: user.email,
     };
-    console.log('body: ', body);
 
     try {
       if (body.password !== e.currentTarget.rpassword.value) {

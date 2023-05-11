@@ -4,8 +4,8 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { Alert, Box, Button, CircularProgress, Container, Link, Stack, TextField } from '@mui/material';
-import { FormPageWrapper } from '@/components/formPageWrapper';
-import PassValidator from '@/components/passValidator';
+import { FormPageWrapper } from '@/components/FormPageWrapper';
+import PassValidator from '@/components/PassValidator';
 import { verifyToken } from '@/lib/auth/resetPassword';
 
 export default function ResetPasswordForm() {

@@ -4,7 +4,7 @@ import { GetServerSideProps } from 'next';
 import { getUserFromSession } from '@/lib/auth/user';
 import { Alert, Box, Button, CircularProgress, Link, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import { FormPageWrapper } from '@/components/formPageWrapper';
+import { FormPageWrapper } from '@/components/FormPageWrapper';
 
 export default function Login() {
   const [errorMsg, setErrorMsg] = useState('');
