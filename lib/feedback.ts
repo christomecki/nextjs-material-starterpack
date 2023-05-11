@@ -3,7 +3,7 @@ export type FeedbackItem = {
   type: 'error' | 'success' | 'warning' | 'info';
 };
 
-export const FEEDBACKS = {
+const feedbacks = {
   'email-verified': {
     text: 'Your email has been verified.',
     type: 'success',
@@ -32,9 +32,13 @@ export const FEEDBACKS = {
     text: 'The link has expired.',
     type: 'error',
   },
+  'account-created': {
+    text: 'Your account has been created.',
+    type: 'success',
+  },
 };
-
-export type FeedbackKey = keyof typeof FEEDBACKS;
+export type FeedbackKey = keyof typeof feedbacks;
+export const FEEDBACKS = feedbacks as Record<FeedbackKey, FeedbackItem>;
 
 export function isFeedbackKey(key: any): key is FeedbackKey {
   return key != null && typeof key === 'string' && key in FEEDBACKS;

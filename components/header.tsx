@@ -8,6 +8,7 @@ import React from 'react';
 import { AccountCircle, Dns, Home, Logout, Person2, Menu as MenuIcon } from '@mui/icons-material';
 import { Box, Stack } from '@mui/system';
 import logo from '@/public/next.svg';
+import logowhite from '@/public/next-white.svg';
 import Image from 'next/image';
 import NextLink from 'next/link';
 
@@ -64,7 +65,7 @@ export default function Header({ user }: { user: UserDto | undefined | null }) {
         </IconButton>
       )}
       <NextLink href="/" style={{ display: 'flex' }}>
-        <Image src={logo} alt="LOGO" height={isMobile ? 15 : 30} />
+        <Image src={logowhite} alt="LOGO" height={isMobile ? 15 : 30} />
       </NextLink>
       <Box sx={{ mr: 2 }}></Box>
       {leftElementsContainer(menuItems.map((items) => <LeftElement key={items.label} href={items.linkTo} label={items.label} icon={items.icon} />))}
@@ -100,7 +101,7 @@ function MItem({ label, href, icon, onClick }: { label: string; href: string; ic
 
 function MButton({ label, href, icon }: { label: string; href: string; icon?: React.ReactNode }) {
   return (
-    <Button variant="contained" sx={{ boxShadow: 'none' }} href={href} startIcon={icon}>
+    <Button color="inherit" sx={{ boxShadow: 'none' }} href={href} startIcon={icon}>
       {label}
     </Button>
   );

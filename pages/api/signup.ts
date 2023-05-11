@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createUser, isValidEmailAddress } from '@/lib/auth/user';
+import { createUser } from '@/lib/auth/user';
+import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import { sendVerificationEmail } from '@/lib/auth/emailVerification';
 import { isPasswordValid } from '@/lib/passValidation/passwordValidaton';
 

@@ -2,9 +2,8 @@ import { FormEvent, useState } from 'react';
 import Router from 'next/router';
 import { GetServerSideProps } from 'next';
 import { getUserFromSession } from '@/lib/auth/user';
-import { Alert, Box, Button, CircularProgress, Container, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Link, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import Link from '@mui/material/Link';
 import { FormPageWrapper } from '@/components/formPageWrapper';
 
 export default function Login() {
@@ -33,7 +32,7 @@ export default function Login() {
       }
     } catch (error: any) {
       console.error('An unexpected error happened occurred:', error);
-      setErrorMsg(error.message);
+      setErrorMsg('Invalid credentials');
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +46,9 @@ export default function Login() {
           <TextField label="Password" variant="outlined" type="password" name="password" required />
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button href="forgotPassword">Forgot password?</Button>
+            <Link style={{ textDecoration: 'none' }} href="forgotPassword">
+              Forgot password?
+            </Link>
 
             <Button type="submit" variant="contained" color="success" disabled={isLoading}>
               {isLoading && <CircularProgress size={'sm'} />}
@@ -55,11 +56,11 @@ export default function Login() {
             </Button>
           </Box>
 
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, boxShadow: 1, px: 2, py: 1, borderRadius: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, px: 2, py: 1, borderRadius: 1 }}>
             <Typography sx={{ my: 'auto' }}>New to our platform?</Typography>
-            <Button variant="outlined" href="/signup">
-              Create an account
-            </Button>
+            <Link style={{ textDecoration: 'none' }} href="/signup">
+              Create an account!
+            </Link>
           </Box>
 
           {errorMsg && <Alert severity="error">{errorMsg}</Alert>}

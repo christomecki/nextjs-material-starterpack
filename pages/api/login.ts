@@ -1,11 +1,12 @@
 import passport from 'passport';
 import nextConnect from 'next-connect';
-import { localStrategy } from '@/lib/auth/password-local';
+import { InvalidEmailPasswordCombination, localStrategy } from '@/lib/auth/password-local';
 import { SessionData, setLoginSession } from '@/lib/auth/auth';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { UserWithId, findUserByEmail, updateUser } from '@/lib/auth/user';
 import { errorMessage } from '@/lib/auth/password-local';
 import { wrongPasswordAlert } from '@/lib/auth/securityAlert';
+import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 
 const authenticate = (method: string, req: NextApiRequest, res: NextApiResponse): Promise<UserWithId> =>
   new Promise((resolve, reject) => {
@@ -40,23 +41,33 @@ export default nextConnect<NextApiRequest, NextApiResponse>()
       });
       res.status(200).send({ done: true });
     } catch (error: any) {
-      console.error(error);
-      if (error.message === errorMessage) {
-        const user = await findUserByEmail(req.body.email);
-        if (user) {
-          wrongPasswordAlert(user.email);
-          updateUser(user._id, {
-            lastFailedLogin: {
-              timestamp: new Date().toISOString(),
-              ip: req.socket.remoteAddress ?? '',
-              userAgent: req.headers['user-agent'] ?? '',
-            },
-          });
-        }
-        res.status(401).send(error.message);
+      if (error instanceof InvalidEmailPasswordCombination) {
+        handleInvalidLogin(req); //not awaiting
       } else {
         console.error(error);
-        res.status(401).send(error.message);
       }
+
+      res.status(401).send('Unauthorized');
     }
   });
+
+async function handleInvalidLogin(req: NextApiRequest) {
+  try {
+    const email = req.body.email;
+    if (email && typeof email === 'string' && isValidEmailAddress(email)) {
+      const user = await findUserByEmail(email);
+      if (user) {
+        wrongPasswordAlert(user.email);
+        updateUser(user._id, {
+          lastFailedLogin: {
+            timestamp: new Date().toISOString(),
+            ip: req.socket.remoteAddress ?? '',
+            userAgent: req.headers['user-agent'] ?? '',
+          },
+        });
+      }
+    }
+  } catch (e) {
+    console.log('handleInvalidLogin error', e);
+  }
+}

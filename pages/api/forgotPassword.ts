@@ -1,5 +1,6 @@
 import { sendResetPasswordEmail } from '@/lib/auth/resetPassword';
-import { findUserByEmail, isValidEmailAddress } from '@/lib/auth/user';
+import { findUserByEmail, isUserConfirmedEmail } from '@/lib/auth/user';
+import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function forgotPassword(req: NextApiRequest, res: NextApiResponse) {
@@ -15,7 +16,7 @@ export default async function forgotPassword(req: NextApiRequest, res: NextApiRe
   }
 
   const user = await findUserByEmail(email);
-  if (user == null) {
+  if (user == null || !isUserConfirmedEmail(user)) {
     res.status(200).end('OK'); //ok, because we don't want to leak if an email exists
     return;
   }

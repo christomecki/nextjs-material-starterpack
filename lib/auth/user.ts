@@ -27,11 +27,15 @@ export type UserWithId = WithId<User>;
 
 export const STARTING_CHAIN = '0';
 
+export function isUserConfirmedEmail(user: User) {
+  return user.chain !== STARTING_CHAIN;
+}
+
 export function userDto(user: User) {
   const safeFields = omit(user, ['hash', 'salt', '_id', 'chain']) as Omit<User, 'hash' | 'salt' | '_id' | 'chain'>;
   return {
     ...safeFields,
-    emailConfirmed: user.chain !== STARTING_CHAIN,
+    emailConfirmed: isUserConfirmedEmail(user),
   };
 }
 
@@ -118,10 +122,6 @@ export async function getUserFromSession(req: RequestWithCookies) {
   } catch (error) {
     return null;
   }
-}
-
-export function isValidEmailAddress(emailAddress: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
 }
 
 export function generateNextChain() {
