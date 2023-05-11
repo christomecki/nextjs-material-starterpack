@@ -23,13 +23,12 @@ export default function Profile({ user }: Props) {
       <InfoBox user={user} />
 
       <Divider sx={{ my: 2 }} />
-      <Typography variant="h5" sx={{ mb: 2 }}>
-        Actions:
-      </Typography>
       <Box>
-        <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="loginDetails" title="Login Details">
-          <LoginDetails user={user} />
-        </AccordionPanel>
+        {(user.lastFailedLogin != null || user.lastLogin != null) && (
+          <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="loginDetails" title="Login Details">
+            <LoginDetails lastFailedLogin={user.lastFailedLogin} lastLogin={user.lastLogin} />
+          </AccordionPanel>
+        )}
 
         <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="changePassword" title="Change password">
           <ChangePasswordForm user={user} />

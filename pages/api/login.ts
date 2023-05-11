@@ -4,7 +4,6 @@ import { InvalidEmailPasswordCombination, localStrategy } from '@/lib/auth/passw
 import { SessionData, setLoginSession } from '@/lib/auth/auth';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { UserWithId, findUserByEmail, updateUser } from '@/lib/auth/user';
-import { errorMessage } from '@/lib/auth/password-local';
 import { wrongPasswordAlert } from '@/lib/auth/securityAlert';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 
