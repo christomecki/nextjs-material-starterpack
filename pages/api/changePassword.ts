@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { User, findUserByEmail, generateNextChain } from '@/lib/auth/user';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
-import passwordValidation from '@/lib/auth/passwordValidaton';
+import { isPasswordValid } from '@/lib/auth/passwordValidaton';
 import crypto from 'crypto';
 import { database } from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
@@ -13,7 +13,7 @@ export default async function changePassword(req: NextApiRequest, res: NextApiRe
   try {
     if (typeof req.body === 'object') {
       const { password, oldpassword, email } = req.body;
-      if (email != null && isValidEmailAddress(email) && passwordValidation(password).every((x) => x === true)) {
+      if (email != null && isValidEmailAddress(email) && isPasswordValid(password)) {
         const user = await findUserByEmail(email);
         if (!user) {
           res.status(401).send({ done: false });
