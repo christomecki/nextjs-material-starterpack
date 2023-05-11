@@ -6,9 +6,10 @@ export default function passwordValidation(password: string) {
   const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
   const hasNoSpaces = !/\s/.test(password);
 
-  return [hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces];
+  return { hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces };
 }
 
 export function isPasswordValid(password: string) {
-  return passwordValidation(password).every((x) => x === true);
+  const res = passwordValidation(password);
+  return res.hasMinLength && res.hasUpperCase && res.hasLowerCase && res.hasNumber && res.hasSpecialChar && res.hasNoSpaces;
 }

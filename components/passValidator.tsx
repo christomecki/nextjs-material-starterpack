@@ -10,7 +10,7 @@ type PassValidatorProps = {
 };
 
 export default function PassValidator({ password, passwordCorrect }: PassValidatorProps) {
-  const [hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces] = passwordValidation(password);
+  const { hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces } = passwordValidation(password);
 
   const allCorrect = hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && hasNoSpaces;
 
