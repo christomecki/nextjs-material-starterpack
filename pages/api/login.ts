@@ -3,7 +3,9 @@ import nextConnect from 'next-connect';
 import { InvalidEmailPasswordCombination, localStrategy } from '@/lib/auth/password-local';
 import { SessionData, setLoginSession } from '@/lib/auth/auth';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { UserWithId } from '@/lib/auth/user';
+import { UserWithId, findUserByEmail, updateUser } from '@/lib/auth/user';
+import { wrongPasswordAlert } from '@/lib/auth/securityAlert';
+import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 
 const authenticate = (method: string, req: NextApiRequest, res: NextApiResponse): Promise<UserWithId> =>
   new Promise((resolve, reject) => {
@@ -30,11 +32,16 @@ export default nextConnect<NextApiRequest, NextApiResponse>()
       };
 
       await setLoginSession(res, session);
-
+      updateUser(user._id, {
+        lastLogin: {
+          timestamp: new Date().toISOString(),
+          ip: req.socket.remoteAddress ?? '',
+        },
+      });
       res.status(200).send({ done: true });
     } catch (error: any) {
       if (error instanceof InvalidEmailPasswordCombination) {
-        console.log('InvalidEmailPasswordCombination');
+        handleInvalidLogin(req); //not awaiting
       } else {
         console.error(error);
       }
@@ -42,3 +49,24 @@ export default nextConnect<NextApiRequest, NextApiResponse>()
       res.status(401).send('Unauthorized');
     }
   });
+
+async function handleInvalidLogin(req: NextApiRequest) {
+  try {
+    const email = req.body.email;
+    if (email && typeof email === 'string' && isValidEmailAddress(email)) {
+      const user = await findUserByEmail(email);
+      if (user) {
+        wrongPasswordAlert(user.email);
+        updateUser(user._id, {
+          lastFailedLogin: {
+            timestamp: new Date().toISOString(),
+            ip: req.socket.remoteAddress ?? '',
+            userAgent: req.headers['user-agent'] ?? '',
+          },
+        });
+      }
+    }
+  } catch (e) {
+    console.log('handleInvalidLogin error', e);
+  }
+}

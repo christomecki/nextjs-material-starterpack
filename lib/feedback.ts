@@ -33,7 +33,7 @@ const feedbacks = {
     type: 'error',
   },
   'account-created': {
-    text: 'Your account has been created.',
+    text: 'Your account has been created. Check your email to verify your account.',
     type: 'success',
   },
 };
