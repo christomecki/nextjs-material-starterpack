@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { database } from '../mongodb';
-import { omit } from 'lodash';
+import { pick } from 'lodash';
 import { Session, getLoginSession } from './auth';
 import { RequestWithCookies } from './types';
 import { ObjectId, WithId } from 'mongodb';
@@ -12,6 +12,15 @@ export type User = {
   hash: string;
   salt: string;
   chain: string;
+  lastLogin?: {
+    timestamp: string;
+    ip: string;
+  };
+  lastFailedLogin?: {
+    timestamp: string;
+    ip: string;
+    userAgent: string;
+  };
 };
 
 export type UserWithId = WithId<User>;
@@ -23,7 +32,7 @@ export function isUserConfirmedEmail(user: User) {
 }
 
 export function userDto(user: User) {
-  const safeFields = omit(user, ['hash', 'salt', '_id', 'chain']) as Omit<User, 'hash' | 'salt' | '_id' | 'chain'>;
+  const safeFields = pick(user, ['createdAt', 'email', 'lastLogin', 'lastFailedLogin']);
   return {
     ...safeFields,
     emailConfirmed: isUserConfirmedEmail(user),

@@ -1,6 +1,13 @@
 import Local from 'passport-local';
 import { findUserByEmail, validatePassword } from './user';
 
+//custom exception type for invalid email and password combination
+export class InvalidEmailPasswordCombination extends Error {
+  constructor() {
+    super('Invalid email and password combination');
+  }
+}
+
 export const localStrategy = new Local.Strategy(
   {
     usernameField: 'email',
@@ -12,7 +19,7 @@ export const localStrategy = new Local.Strategy(
         if (user && validatePassword(user, password)) {
           done(null, user);
         } else {
-          done(new Error('Invalid email and password combination'));
+          done(new InvalidEmailPasswordCombination());
         }
       })
       .catch((error) => {

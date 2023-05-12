@@ -7,12 +7,13 @@ import LogoutAllSession from '@/components/profile/LogoutAllSessions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChangePasswordForm from '@/components/changePasswordForm';
 import DeleteAccount from '@/components/deleteAccount';
+import { LoginDetails } from '@/components/profile/LoginDetails';
 
 type Props = {
   user: UserDto;
 };
 
-type AccordionPanels = 'changePassword' | 'logoutAllSessions' | 'deleteAccount';
+type AccordionPanels = 'loginDetails' | 'changePassword' | 'logoutAllSessions' | 'deleteAccount';
 
 export default function Profile({ user }: Props) {
   const [expanded, setExpanded] = React.useState<AccordionPanels | false>(false);
@@ -22,10 +23,13 @@ export default function Profile({ user }: Props) {
       <InfoBox user={user} />
 
       <Divider sx={{ my: 2 }} />
-      <Typography variant="h5" sx={{ mb: 2 }}>
-        Actions:
-      </Typography>
       <Box>
+        {(user.lastFailedLogin != null || user.lastLogin != null) && (
+          <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="loginDetails" title="Login Details">
+            <LoginDetails lastFailedLogin={user.lastFailedLogin} lastLogin={user.lastLogin} />
+          </AccordionPanel>
+        )}
+
         <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="changePassword" title="Change password">
           <ChangePasswordForm user={user} />
         </AccordionPanel>
