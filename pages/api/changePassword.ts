@@ -16,16 +16,16 @@ export default async function changePassword(req: NextApiRequest, res: NextApiRe
       if (email != null && isValidEmailAddress(email) && isValidationValid(passwordValidation(password))) {
         const user = await findUserByEmail(email);
         if (!user) {
-          res.status(401).send({ done: false });
+          res.status(401).send('Error');
           return;
         }
         if (oldpassword === password) {
-          res.status(401).send({ done: false });
+          res.status(401).send('Error');
           return;
         }
         const oldHash = crypto.pbkdf2Sync(password, user.salt, 1000, 64, 'sha512').toString('hex');
         if (oldHash === user.hash) {
-          res.status(401).send({ done: false });
+          res.status(401).send('Error');
           return;
         }
         const salt = crypto.randomBytes(16).toString('hex');
@@ -42,7 +42,7 @@ export default async function changePassword(req: NextApiRequest, res: NextApiRe
 
         await setLoginSession(res, session);
 
-        res.status(200).send({ done: true });
+        res.status(200).send('OK');
       }
     }
   } catch (error: any) {}

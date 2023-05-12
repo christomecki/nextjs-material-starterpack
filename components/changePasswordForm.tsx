@@ -1,92 +1,113 @@
 import { UserDto } from '@/lib/auth/user';
-import React, { FormEvent } from 'react';
-import { Alert, Box, Button, Grid, Stack, TextField } from '@mui/material';
+import React from 'react';
+import { Alert, Button, CircularProgress, Grid, Stack, TextField } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
 import { useIsMobile } from '@/lib/material/useIsMobile';
-import PassValidator from './passValidator';
+import { PasswordStrengthMeter } from './passValidator';
+import { useForm } from 'react-hook-form';
+import { enqueueSnackbar } from 'notistack';
+import { fieldRegisterWrapper } from '@/lib/material/fieldRegisterWrapper';
+import passwordValidation, { isValidationValid } from '@/lib/passValidation/passwordValidaton';
+import { values } from 'lodash';
 
 type Props = {
   user: UserDto;
 };
 
-type Form = {
+type FormData = {
   password: string;
   rpassword: string;
   oldpassword: string;
 };
 
 export default function ChangePasswordForm({ user }: Props) {
-  const [passwordForm, setPasswordForm] = React.useState<Form>({ password: '', rpassword: '', oldpassword: '' });
-  const [passwordCorrect, setPasswordCorrect] = React.useState<boolean>(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch,
+    reset,
+  } = useForm<FormData>({});
+
   const [errorMsg, setErrorMsg] = React.useState<string>('');
-  const [successMsg, setSuccessMsg] = React.useState<string>('');
   const isMobile = useIsMobile();
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setErrorMsg('');
+  const onSubmit = handleSubmit(async (data) => {
+    if (errorMsg) setErrorMsg('');
+
     const body = {
-      password: e.currentTarget.password.value,
-      oldpassword: e.currentTarget.oldpassword.value,
+      password: data.password,
+      oldpassword: data.oldpassword,
       email: user.email,
     };
-    console.log('body: ', body);
 
     try {
-      if (body.password !== e.currentTarget.rpassword.value) {
-        setErrorMsg('The passwords do not match');
-      } else if (!passwordCorrect) {
-        setErrorMsg('Password not valid');
-      } else if (body.password === body.oldpassword) {
-        setErrorMsg('New password cannot be the same as the old one');
+      const res = await fetch('api/changePassword', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (res.status === 200) {
+        enqueueSnackbar('Password changed', { variant: 'success' });
+        reset();
       } else {
-        const res = await fetch('api/changePassword', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
-        if (res.status !== 200) {
-          console.log('password not changed');
-        } else {
-          setSuccessMsg('Password changed successfully');
-          setPasswordForm({ password: '', rpassword: '', oldpassword: '' });
-        }
+        throw new Error("Couldn't change password");
       }
     } catch (error: any) {
-      console.error('An unexpected error happened occurred:', error);
+      console.error('An error occurred:', error);
+      setErrorMsg(error.message);
     }
-  };
+  });
+
+  const field = fieldRegisterWrapper(register, errors);
+
   return (
     <Grid container spacing={2} sx={{ width: '100%' }}>
       <Grid item xs={12} md={6}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmit}>
           <Stack spacing={2}>
             <TextField
-              label="Old Password"
+              label="Current password"
               variant="outlined"
               type="password"
-              name="oldpassword"
-              value={passwordForm.oldpassword}
-              onChange={(e) => setPasswordForm({ ...passwordForm, oldpassword: e.target.value })}
-              required
+              {...field('oldpassword', {
+                required: {
+                  value: true,
+                  message: 'Your current password is required',
+                },
+              })}
             />
             <TextField
               label="New Password"
               variant="outlined"
               type="password"
-              name="password"
-              value={passwordForm.password}
-              onChange={(e) => setPasswordForm({ ...passwordForm, password: e.target.value })}
-              required
+              {...field('password', {
+                required: {
+                  value: true,
+                  message: 'Password is required',
+                },
+                validate: (value, formValues) => {
+                  if (!isValidationValid(passwordValidation(value))) {
+                    return 'Password is not strong enough';
+                  }
+                  if (value === formValues.oldpassword) {
+                    return 'New password cannot be the same as old password';
+                  }
+                  return true;
+                },
+              })}
             ></TextField>
             <TextField
               label="Repeat Password"
               variant="outlined"
               type="password"
-              name="rpassword"
-              value={passwordForm.rpassword}
-              onChange={(e) => setPasswordForm({ ...passwordForm, rpassword: e.target.value })}
-              required
+              {...field('rpassword', {
+                required: {
+                  value: true,
+                  message: 'Repeated password is required',
+                },
+                validate: (value, formValues) => value === formValues.password || 'Passwords do not match',
+              })}
             />
             <Button
               type="submit"
@@ -94,16 +115,14 @@ export default function ChangePasswordForm({ user }: Props) {
               sx={{
                 width: isMobile ? '100%' : 'max-content',
               }}
+              disabled={isSubmitting}
             >
+              {isSubmitting && <CircularProgress size={'sm'} />}
               Submit
             </Button>
-            {errorMsg ? (
+            {errorMsg && (
               <Collapse in={errorMsg !== ''} onClick={() => setErrorMsg('')}>
                 <Alert severity="error">{errorMsg}</Alert>
-              </Collapse>
-            ) : (
-              <Collapse in={successMsg !== ''} onClick={() => setSuccessMsg('')}>
-                <Alert severity="success">{successMsg}</Alert>
               </Collapse>
             )}
           </Stack>
@@ -111,7 +130,7 @@ export default function ChangePasswordForm({ user }: Props) {
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <PassValidator password={passwordForm.password} passwordCorrect={setPasswordCorrect} />
+        <PasswordStrengthMeter validation={passwordValidation(watch('password', ''))} />
       </Grid>
     </Grid>
   );
