@@ -18,6 +18,7 @@ type FormData = {
 };
 
 import { feedbackUrlParam } from '@/lib/feedback';
+import { passwordRegisterOptions, repeatedPasswordRegisterOptions } from '@/components/passwordRegisterOptions';
 
 export default function Signup() {
   const [errorMsg, setErrorMsg] = useState('');
@@ -71,30 +72,8 @@ export default function Signup() {
               validate: (value) => isValidEmailAddress(value) || 'Email is not valid',
             })}
           />
-          <TextField
-            label="Password"
-            variant="outlined"
-            type="password"
-            {...field('password', {
-              required: {
-                value: true,
-                message: 'Password is required',
-              },
-              validate: (value) => isValidationValid(passwordValidation(value)) || 'Password is not strong enough',
-            })}
-          />
-          <TextField
-            label="Repeat Password"
-            variant="outlined"
-            type="password"
-            {...field('rpassword', {
-              required: {
-                value: true,
-                message: 'Repeated password is required',
-              },
-              validate: (value, formValues) => value === formValues.password || 'Passwords do not match',
-            })}
-          />
+          <TextField label="Password" variant="outlined" type="password" {...field('password', passwordRegisterOptions())} />
+          <TextField label="Repeat Password" variant="outlined" type="password" {...field('rpassword', repeatedPasswordRegisterOptions())} />
 
           <PasswordStrengthMeter validation={passwordValidation(watch('password', ''))} />
           <Box sx={{ display: 'flex' }}>

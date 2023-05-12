@@ -8,8 +8,7 @@ import { useForm } from 'react-hook-form';
 import { enqueueSnackbar } from 'notistack';
 import { fieldRegisterWrapper } from '@/lib/material/fieldRegisterWrapper';
 import passwordValidation, { isValidationValid } from '@/lib/passValidation/passwordValidaton';
-import { values } from 'lodash';
-
+import { passwordRegisterOptions, repeatedPasswordRegisterOptions } from './passwordRegisterOptions';
 type Props = {
   user: UserDto;
 };
@@ -81,34 +80,22 @@ export default function ChangePasswordForm({ user }: Props) {
               label="New Password"
               variant="outlined"
               type="password"
-              {...field('password', {
-                required: {
-                  value: true,
-                  message: 'Password is required',
-                },
-                validate: (value, formValues) => {
-                  if (!isValidationValid(passwordValidation(value))) {
-                    return 'Password is not strong enough';
-                  }
-                  if (value === formValues.oldpassword) {
-                    return 'New password cannot be the same as old password';
-                  }
-                  return true;
-                },
-              })}
+              {...field(
+                'password',
+                passwordRegisterOptions({
+                  validate: (value, formValues) => {
+                    if (!isValidationValid(passwordValidation(value))) {
+                      return 'Password is not strong enough';
+                    }
+                    if (value === formValues.oldpassword) {
+                      return 'New password cannot be the same as old password';
+                    }
+                    return true;
+                  },
+                })
+              )}
             ></TextField>
-            <TextField
-              label="Repeat Password"
-              variant="outlined"
-              type="password"
-              {...field('rpassword', {
-                required: {
-                  value: true,
-                  message: 'Repeated password is required',
-                },
-                validate: (value, formValues) => value === formValues.password || 'Passwords do not match',
-              })}
-            />
+            <TextField label="Repeat Password" variant="outlined" type="password" {...field('rpassword', repeatedPasswordRegisterOptions())} />
             <Button
               type="submit"
               variant="contained"
