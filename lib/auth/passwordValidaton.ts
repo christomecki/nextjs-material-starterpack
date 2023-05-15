@@ -9,7 +9,12 @@ export default function passwordValidation(password: string) {
   return { hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces };
 }
 
+export type PasswordValidation = ReturnType<typeof passwordValidation>;
+
+export function isValidationValid(validation: PasswordValidation) {
+  return Object.values(validation).every((x) => x === true);
+}
+
 export function isPasswordValid(password: string) {
-  const res = passwordValidation(password);
-  return res.hasMinLength && res.hasUpperCase && res.hasLowerCase && res.hasNumber && res.hasSpecialChar && res.hasNoSpaces;
+  return isValidationValid(passwordValidation(password));
 }

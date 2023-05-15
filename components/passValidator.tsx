@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-import passwordValidation from '@/lib/auth/passwordValidaton';
+
+import passwordValidation, { PasswordValidation } from '@/lib/auth/passwordValidaton';
 
 type PassValidatorProps = {
   password: string;
@@ -10,7 +11,9 @@ type PassValidatorProps = {
 };
 
 export default function PassValidator({ password, passwordCorrect }: PassValidatorProps) {
-  const { hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces } = passwordValidation(password);
+
+  const validation = passwordValidation(password);
+  const { hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces } = validation;
 
   const allCorrect = hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && hasNoSpaces;
 
@@ -18,9 +21,16 @@ export default function PassValidator({ password, passwordCorrect }: PassValidat
     passwordCorrect(allCorrect);
   }, [allCorrect, passwordCorrect]);
 
+  return <PasswordStrengthMeter validation={validation} />;
+}
+
+export function PasswordStrengthMeter({ validation }: { validation: PasswordValidation }) {
+  const { hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces } = validation;
   return (
     <Box sx={(theme) => ({ border: '1px solid', borderColor: theme.palette.divider, borderRadius: '5px', padding: '10px' })}>
-      <Typography variant='subtitle1' sx={(theme) => ({ color: theme.palette.grey[400], mb: '10px' })}>Password requirements:</Typography>
+      <Typography variant="subtitle1" sx={(theme) => ({ color: theme.palette.grey[400], mb: '10px' })}>
+        Password requirements:
+      </Typography>
       <Condition value={hasMinLength}>Minimum length 8</Condition>
       <Condition value={hasUpperCase}>Must have uppercase letter</Condition>
       <Condition value={hasLowerCase}>Must have lowercase letter</Condition>
@@ -30,6 +40,7 @@ export default function PassValidator({ password, passwordCorrect }: PassValidat
     </Box>
   );
 }
+
 function Correct({ children }: { children: React.ReactNode }) {
   return (
     <Box sx={(theme) => ({ color: theme.palette.success.main, display: 'flex', mb: '5px' })}>

@@ -1,3 +1,4 @@
+import { feedbackUrlParam } from '@/lib/feedback';
 import { Alert, Box, Button, Collapse, TextField, Typography } from '@mui/material';
 import Router from 'next/router';
 import React, { FormEvent } from 'react';
@@ -23,7 +24,7 @@ export default function DeleteAccount() {
         setErrorMsg('Something went wrong');
       } else {
         await fetch('api/logout');
-        Router.push('/');
+        Router.push(`/?${feedbackUrlParam('account-deleted')}`);
       }
     } catch (error) {
       console.log(error);
