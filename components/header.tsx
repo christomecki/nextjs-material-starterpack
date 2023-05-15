@@ -7,7 +7,6 @@ import { useIsMobile } from '@/lib/material/useIsMobile';
 import React from 'react';
 import { AccountCircle, Dns, Home, Logout, Person2, Menu as MenuIcon } from '@mui/icons-material';
 import { Box, Stack } from '@mui/system';
-import logo from '@/public/next.svg';
 import logowhite from '@/public/next-white.svg';
 import Image from 'next/image';
 import NextLink from 'next/link';

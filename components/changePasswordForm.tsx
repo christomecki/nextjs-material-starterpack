@@ -7,7 +7,7 @@ import { PasswordStrengthMeter } from './passValidator';
 import { useForm } from 'react-hook-form';
 import { enqueueSnackbar } from 'notistack';
 import { fieldRegisterWrapper } from '@/lib/material/fieldRegisterWrapper';
-import passwordValidation, { isValidationValid } from '@/lib/passValidation/passwordValidaton';
+import passwordValidation, { isValidationValid } from '@/lib/auth/passwordValidaton';
 import { passwordRegisterOptions, repeatedPasswordRegisterOptions } from './passwordRegisterOptions';
 type Props = {
   user: UserDto;

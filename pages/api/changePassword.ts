@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { User, findUserByEmail, generateNextChain } from '@/lib/auth/user';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
-import passwordValidation, { isValidationValid } from '@/lib/passValidation/passwordValidaton';
+import passwordValidation, { isValidationValid } from '@/lib/auth/passwordValidaton';
 import crypto from 'crypto';
 import { database } from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';

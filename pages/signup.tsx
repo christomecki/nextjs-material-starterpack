@@ -4,12 +4,11 @@ import { GetServerSideProps } from 'next';
 import { getUserFromSession } from '@/lib/auth/user';
 import { Alert, Box, Button, CircularProgress, Link, Stack, TextField } from '@mui/material';
 import { PasswordStrengthMeter } from '@/components/passValidator';
-import { FormPageWrapper } from '@/components/formPageWrapper';
-
+import { FormPageWrapper } from '@/components/FormPageWrapper';
 import { useForm } from 'react-hook-form';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import { fieldRegisterWrapper } from '@/lib/material/fieldRegisterWrapper';
-import passwordValidation, { isValidationValid } from '@/lib/passValidation/passwordValidaton';
+import passwordValidation from '@/lib/auth/passwordValidaton';
 
 type FormData = {
   email: string;

@@ -4,13 +4,13 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { Box, Button, CircularProgress, Link, Stack, TextField } from '@mui/material';
-import { FormPageWrapper } from '@/components/formPageWrapper';
+import { FormPageWrapper } from '@/components/FormPageWrapper';
 import { PasswordStrengthMeter } from '@/components/passValidator';
 import { verifyToken } from '@/lib/auth/resetPassword';
 import { useForm } from 'react-hook-form';
 import { fieldRegisterWrapper } from '@/lib/material/fieldRegisterWrapper';
 import { passwordRegisterOptions, repeatedPasswordRegisterOptions } from '@/components/passwordRegisterOptions';
-import passwordValidation from '@/lib/passValidation/passwordValidaton';
+import passwordValidation from '@/lib/auth/passwordValidaton';
 
 type FormData = {
   password: string;
@@ -52,7 +52,7 @@ export default function ResetPasswordForm() {
     } catch (error: any) {
       console.error('An unexpected error happened occurred:', error);
       router.replace(`/?${feedbackUrlParam('bad-request')}`);
-    } 
+    }
   });
 
   const field = fieldRegisterWrapper(register, errors);
@@ -61,7 +61,7 @@ export default function ResetPasswordForm() {
     <FormPageWrapper title="Reset Password">
       <form onSubmit={onSubmit}>
         <Stack spacing={2}>
-        <TextField label="Password" variant="outlined" type="password" {...field('password', passwordRegisterOptions())} />
+          <TextField label="Password" variant="outlined" type="password" {...field('password', passwordRegisterOptions())} />
           <TextField label="Repeat Password" variant="outlined" type="password" {...field('rpassword', repeatedPasswordRegisterOptions())} />
 
           <PasswordStrengthMeter validation={passwordValidation(watch('password', ''))} />
