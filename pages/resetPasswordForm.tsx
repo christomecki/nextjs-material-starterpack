@@ -5,11 +5,11 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { Box, Button, CircularProgress, Link, Stack, TextField } from '@mui/material';
 import { FormPageWrapper } from '@/components/FormPageWrapper';
-import { PasswordStrengthMeter } from '@/components/passValidator';
+import { PasswordStrengthMeter } from '@/components/PassValidator';
 import { verifyToken } from '@/lib/auth/resetPassword';
 import { useForm } from 'react-hook-form';
 import { fieldRegisterWrapper } from '@/lib/material/fieldRegisterWrapper';
-import { passwordRegisterOptions, repeatedPasswordRegisterOptions } from '@/components/passwordRegisterOptions';
+import { passwordRegisterOptions, repeatedPasswordRegisterOptions } from '@/lib/auth/passwordRegisterOptions';
 import passwordValidation from '@/lib/auth/passwordValidaton';
 
 type FormData = {

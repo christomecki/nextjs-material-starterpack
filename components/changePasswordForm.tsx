@@ -3,12 +3,12 @@ import React from 'react';
 import { Alert, Button, CircularProgress, Grid, Stack, TextField } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
 import { useIsMobile } from '@/lib/material/useIsMobile';
-import { PasswordStrengthMeter } from './passValidator';
+import { PasswordStrengthMeter } from './PassValidator';
 import { useForm } from 'react-hook-form';
 import { enqueueSnackbar } from 'notistack';
 import { fieldRegisterWrapper } from '@/lib/material/fieldRegisterWrapper';
 import passwordValidation, { isValidationValid } from '@/lib/auth/passwordValidaton';
-import { passwordRegisterOptions, repeatedPasswordRegisterOptions } from './passwordRegisterOptions';
+import { passwordRegisterOptions, repeatedPasswordRegisterOptions } from '../lib/auth/passwordRegisterOptions';
 type Props = {
   user: UserDto;
 };
