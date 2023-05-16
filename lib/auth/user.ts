@@ -80,8 +80,28 @@ export async function findUserById(id: string | ObjectId) {
   return await userCollection.findOne({ _id: new ObjectId(id) });
 }
 
-export async function updateUser(id: string | ObjectId, update: Partial<User>) {
+async function updateUser_unsafe(id: string | ObjectId, update: Partial<User>) {
   return await userCollection.updateOne({ _id: new ObjectId(id) }, { $set: update });
+}
+
+export async function updateUser(id: string | ObjectId, update: Partial<User>) {
+  if (update.chain != null) {
+    const user = await findUserById(id);
+    if (user == null) {
+      throw new Error('User not found');
+    }
+    if (user.chain === STARTING_CHAIN) {
+      throw new Error('Cannot update user chain before email is confirmed');
+    }
+  }
+  return await updateUser_unsafe(id, update);
+}
+
+export async function confirmEmail(user: UserWithId, nextChain: string) {
+  if (user.chain !== STARTING_CHAIN) {
+    throw new Error('User already confirmed email');
+  }
+  return await updateUser_unsafe(user._id, { chain: nextChain });
 }
 
 export function validatePassword(user: UserWithId, inputPassword: string) {
