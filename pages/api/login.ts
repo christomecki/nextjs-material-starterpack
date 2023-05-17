@@ -6,7 +6,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { UserWithId, findUserByEmail, updateUser } from '@/lib/auth/user';
 import { wrongPasswordAlert } from '@/lib/auth/securityAlert';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
-import { rateLimiterMiddleware } from '@/lib/auth/rateLimiterMiddleware';
+import { rateLimiterMiddlewareGenerator } from '@/lib/auth/rateLimiterMiddleware';
 
 const authenticate = (method: string, req: NextApiRequest, res: NextApiResponse): Promise<UserWithId> =>
   new Promise((resolve, reject) => {
@@ -23,33 +23,38 @@ passport.use(localStrategy);
 
 export default nextConnect<NextApiRequest, NextApiResponse>()
   .use(passport.initialize())
-  .post((req, res) => {
-    rateLimiterMiddleware(req, res, async () => {
-      try {
-        const user = await authenticate('local', req, res);
+  .use(
+    rateLimiterMiddlewareGenerator({
+      limit: 5,
+      windowMs: 60 * 1000 * 30, // 30 minutes
+    })
+  )
+  .post(async (req, res) => {
+    try {
+      console.log('Login API working...');
+      const user = await authenticate('local', req, res);
 
-        const session: SessionData = {
-          userId: String(user._id),
-          chain: user.chain,
-        };
+      const session: SessionData = {
+        userId: String(user._id),
+        chain: user.chain,
+      };
 
-        await setLoginSession(res, session);
-        updateUser(user._id, {
-          lastLogin: {
-            timestamp: new Date().toISOString(),
-            ip: req.socket.remoteAddress ?? '',
-          },
-        });
-        res.status(200).send({ done: true });
-      } catch (error: any) {
-        if (error instanceof InvalidEmailPasswordCombination) {
-          handleInvalidLogin(req); //not awaiting
-        } else {
-          console.error(error);
-        }
-        res.status(401).send('Unauthorized');
+      await setLoginSession(res, session);
+      updateUser(user._id, {
+        lastLogin: {
+          timestamp: new Date().toISOString(),
+          ip: req.socket.remoteAddress ?? '',
+        },
+      });
+      res.status(200).send({ done: true });
+    } catch (error: any) {
+      if (error instanceof InvalidEmailPasswordCombination) {
+        handleInvalidLogin(req); //not awaiting
+      } else {
+        console.error(error);
       }
-    });
+      res.status(401).send('Unauthorized');
+    }
   });
 
 async function handleInvalidLogin(req: NextApiRequest) {
