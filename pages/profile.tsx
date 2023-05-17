@@ -19,7 +19,7 @@ export default function Profile({ user }: Props) {
   const [expanded, setExpanded] = React.useState<AccordionPanels | false>(false);
 
   return (
-    <Container sx={{ mt: 2 }}>
+    <Container sx={{ mt: 2, pb: 2 }}>
       <InfoBox user={user} />
 
       <Divider sx={{ my: 2 }} />
