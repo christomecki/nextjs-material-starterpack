@@ -1,37 +1,36 @@
+import rateLimit from 'express-rate-limit';
+import slowDown from 'express-slow-down';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { NextHandler } from 'next-connect';
 
-type RateLimitData = {
-  lastRequestTime: number;
-  requestCount: number;
+const applyMiddleware = (middleware: any) => (request: NextApiRequest, response: NextApiResponse) =>
+  new Promise((resolve, reject) => {
+    middleware(request, response, (result: any) => (result instanceof Error ? reject(result) : resolve(result)));
+  });
+
+const getIP = (request: any) => request.ip || request.headers['x-forwarded-for'] || request.headers['x-real-ip'] || request.connection.remoteAddress;
+
+export type RateLimiterParams = {
+  limit?: number;
+  windowMs?: number;
+  delayAfter?: number;
+  delayMs?: number;
 };
 
-const rateLimitData: Record<string, RateLimitData> = {};
-export const rateLimiterMiddleware = (req: NextApiRequest, res: NextApiResponse, next: () => void) => {
-  const maxRequestTime = 1000 * 10; //10s = 1000ms * 10
-  const maxRequests = 3;
-  const ip = req.socket.remoteAddress ?? '';
-  const now = Date.now();
+export const getRateLimitMiddlewares = ({
+  limit = 10,
+  windowMs = 60 * 1000 * 5,
+  delayAfter = Math.round(limit / 2),
+  delayMs = 500,
+}: RateLimiterParams = {}) => [slowDown({ keyGenerator: getIP, windowMs, delayAfter, delayMs }), rateLimit({ keyGenerator: getIP, windowMs, max: limit })];
 
-  if (!rateLimitData[ip]) {
-    console.log('IP has been noted');
-    rateLimitData[ip] = {
-      lastRequestTime: now,
-      requestCount: 1,
-    };
-  } else {
-    const { lastRequestTime, requestCount } = rateLimitData[ip];
-    const elapsedTime = now - lastRequestTime;
-    if (elapsedTime < maxRequestTime) {
-      if (requestCount > maxRequests) {
-        return res.status(429).send('Too many requests');
-      }
-      rateLimitData[ip].requestCount += 1;
-    } else {
-      rateLimitData[ip] = {
-        lastRequestTime: now,
-        requestCount: 1,
-      };
-    }
-  }
-  next();
+export const rateLimiterMiddlewareGenerator = (params?: RateLimiterParams) => {
+  const middlewares = getRateLimitMiddlewares(params);
+  return async (request: NextApiRequest, response: NextApiResponse, next: NextHandler) => {
+    await Promise.all(middlewares.map(applyMiddleware).map((middleware) => middleware(request, response)));
+    next();
+  };
 };
+
+const defaultRateLimiterMiddleware = rateLimiterMiddlewareGenerator();
+export default defaultRateLimiterMiddleware;
