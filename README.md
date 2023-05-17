@@ -1,8 +1,16 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## NextJS STARTER PACK
 
-## Getting Started
 
-First, run the development server:
+## Installation
+
+On the command-line or Terminal, navigate to the root of the directory which you downloaded and run:
+
+* If you have npm: `npm install`
+* If you have yarn: `yarn install`
+
+## Run app
+
+Run the development server:
 
 ```bash
 npm run dev
@@ -14,13 +22,24 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
 [API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+
+## Running JEST tests
+
+Here are a few commands you should now be able to run JEST tests:
+
+* Run Jest tests once: `npm test` or `yarn test`
+* Run Jest in watch mode (great for TDD): `npm run test:watch` or `yarn test:watch`
+
+## Running CYPRESS tests
+
+Here are a few commands you should now be able to run Cypress tests:
+
+* Run Cypress tests once: `npm cypress:open` or `yarn cypress:open`
 
 ## Learn More
 
