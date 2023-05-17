@@ -39,7 +39,7 @@ export default function Login() {
       if (res.status === 200) {
         Router.push('/');
       } else if (res.status === 429) {
-        setErrorMsg('Too many requests');
+        setErrorMsg('Too many requests, try later');
         throw new Error(await res.text());
       } else {
         console.log("Status code: ", res.status);
