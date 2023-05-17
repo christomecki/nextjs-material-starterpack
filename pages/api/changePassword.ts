@@ -1,13 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { User, findUserByEmail, generateNextChain } from '@/lib/auth/user';
+import { findUserByEmail, generateNextChain, updateUser } from '@/lib/auth/user';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import passwordValidation, { isValidationValid } from '@/lib/auth/passwordValidaton';
 import crypto from 'crypto';
-import { database } from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
 import { SessionData, setLoginSession } from '@/lib/auth/auth';
-
-const userCollection = database.collection<User>('user');
 
 export default async function changePassword(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -33,7 +29,7 @@ export default async function changePassword(req: NextApiRequest, res: NextApiRe
 
         const newChain = generateNextChain();
 
-        await userCollection.updateOne({ _id: new ObjectId(user._id) }, { $set: { hash: newHash, salt: salt, chain: newChain } });
+        await updateUser(user._id, { hash: newHash, salt: salt, chain: newChain });
 
         const session: SessionData = {
           userId: String(user._id),
