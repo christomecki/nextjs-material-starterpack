@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { findUserByEmail, generateNextChain, updateUser } from '@/lib/auth/user';
+import { findUserByEmail, generateNextChain, generateSaltAndHash, updateUser, validatePassword } from '@/lib/auth/user';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import passwordValidation, { isValidationValid } from '@/lib/auth/passwordValidaton';
 import crypto from 'crypto';
@@ -19,21 +19,20 @@ export default async function changePassword(req: NextApiRequest, res: NextApiRe
           res.status(401).send('Error');
           return;
         }
-        const oldHash = crypto.pbkdf2Sync(password, user.salt, 1000, 64, 'sha512').toString('hex');
-        if (oldHash === user.hash) {
+
+        if (!validatePassword(user, oldpassword)) {
           res.status(401).send('Error');
           return;
         }
-        const salt = crypto.randomBytes(16).toString('hex');
-        const newHash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
 
-        const newChain = generateNextChain();
+        const { hash, salt } = generateSaltAndHash(password);
+        const chain = generateNextChain();
 
-        await updateUser(user._id, { hash: newHash, salt: salt, chain: newChain });
+        await updateUser(user._id, { hash, salt, chain });
 
         const session: SessionData = {
           userId: String(user._id),
-          chain: newChain,
+          chain,
         };
 
         await setLoginSession(res, session);
