@@ -4,11 +4,11 @@ import { AppProps } from 'next/app';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import createEmotionCache from '../lib/material/createEmotionCache';
-import Layout from '@/components/layout';
+import Layout from '@/components/Layout';
 import { CurrentThemeProvider } from '@/lib/material/CurrentThemeProvider';
 
 import '../styles/globals.css';
-import { CookieNotice } from '@/components/cookieNotice';
+import { CookieNotice } from '@/components/CookieNotice';
 import { FeedbackMessage } from '@/components/FeedbackMessage';
 import { SnackbarProvider } from 'notistack';
 import { SnackbarCloseButton } from '@/components/SnackbarCloseButton';

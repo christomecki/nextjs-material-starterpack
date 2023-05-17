@@ -36,6 +36,14 @@ const feedbacks = {
     text: 'Your account has been created. Check your email to verify your account.',
     type: 'success',
   },
+  'account-deleted': {
+    text: 'Your account has been deleted.',
+    type: 'success',
+  },
+  'confirmation-link-sent': {
+    text: 'A new confirmation link has been sent to your email.',
+    type: 'success',
+  },
 };
 export type FeedbackKey = keyof typeof feedbacks;
 export const FEEDBACKS = feedbacks as Record<FeedbackKey, FeedbackItem>;

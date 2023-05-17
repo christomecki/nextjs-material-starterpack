@@ -6,9 +6,15 @@ export default function passwordValidation(password: string) {
   const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
   const hasNoSpaces = !/\s/.test(password);
 
-  return [hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces];
+  return { hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces };
+}
+
+export type PasswordValidation = ReturnType<typeof passwordValidation>;
+
+export function isValidationValid(validation: PasswordValidation) {
+  return Object.values(validation).every((x) => x === true);
 }
 
 export function isPasswordValid(password: string) {
-  return passwordValidation(password).every((x) => x === true);
+  return isValidationValid(passwordValidation(password));
 }

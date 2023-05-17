@@ -1,48 +1,43 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { User, findUserByEmail, generateNextChain } from '@/lib/auth/user';
+import { findUserByEmail, generateNextChain, generateSaltAndHash, updateUser, validatePassword } from '@/lib/auth/user';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
-import passwordValidation from '@/lib/passValidation/passwordValidaton';
+import passwordValidation, { isValidationValid } from '@/lib/auth/passwordValidaton';
 import crypto from 'crypto';
-import { database } from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
 import { SessionData, setLoginSession } from '@/lib/auth/auth';
-
-const userCollection = database.collection<User>('user');
 
 export default async function changePassword(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (typeof req.body === 'object') {
       const { password, oldpassword, email } = req.body;
-      if (email != null && isValidEmailAddress(email) && passwordValidation(password).every((x) => x === true)) {
+      if (email != null && isValidEmailAddress(email) && isValidationValid(passwordValidation(password))) {
         const user = await findUserByEmail(email);
         if (!user) {
-          res.status(401).send({ done: false });
+          res.status(401).send('Error');
           return;
         }
         if (oldpassword === password) {
-          res.status(401).send({ done: false });
+          res.status(401).send('Error');
           return;
         }
-        const oldHash = crypto.pbkdf2Sync(password, user.salt, 1000, 64, 'sha512').toString('hex');
-        if (oldHash === user.hash) {
-          res.status(401).send({ done: false });
+
+        if (!validatePassword(user, oldpassword)) {
+          res.status(401).send('Error');
           return;
         }
-        const salt = crypto.randomBytes(16).toString('hex');
-        const newHash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
 
-        const newChain = generateNextChain();
+        const { hash, salt } = generateSaltAndHash(password);
+        const chain = generateNextChain();
 
-        await userCollection.updateOne({ _id: new ObjectId(user._id) }, { $set: { hash: newHash, salt: salt, chain: newChain } });
+        await updateUser(user._id, { hash, salt, chain });
 
         const session: SessionData = {
           userId: String(user._id),
-          chain: newChain,
+          chain,
         };
 
         await setLoginSession(res, session);
 
-        res.status(200).send({ done: true });
+        res.status(200).send('OK');
       }
     }
   } catch (error: any) {}

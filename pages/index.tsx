@@ -4,7 +4,7 @@ import { GetServerSideProps } from 'next';
 import { getUserFromSession, UserDto } from '@/lib/auth/user';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { FOOTER_HEIGHT } from '@/components/footer';
+import { FOOTER_HEIGHT } from '@/components/Footer';
 
 type Props = {
   user: UserDto | null;
