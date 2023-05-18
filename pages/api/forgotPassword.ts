@@ -2,12 +2,9 @@ import { sendResetPasswordEmail } from '@/lib/auth/resetPassword';
 import { findUserByEmail, isUserConfirmedEmail } from '@/lib/auth/user';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { rateLimiterMiddlewareGenerator } from '@/lib/auth/rateLimiterMiddleware';
+import { loginRelatedRateLimitParams, rateLimiterMiddlewareGenerator } from '@/lib/auth/rateLimiterMiddleware';
 
-const rateLimiterMiddleware = rateLimiterMiddlewareGenerator({
-  limit: 2,
-  windowMs: 60 * 1000 * 30, // 30 minutes
-});
+const rateLimiterMiddleware = rateLimiterMiddlewareGenerator(loginRelatedRateLimitParams);
 
 export default async function forgotPassword(req: NextApiRequest, res: NextApiResponse) {
   await rateLimiterMiddleware(req, res, async () => {

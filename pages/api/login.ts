@@ -6,7 +6,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { UserWithId, findUserByEmail, updateUser } from '@/lib/auth/user';
 import { wrongPasswordAlert } from '@/lib/auth/securityAlert';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
-import { rateLimiterMiddlewareGenerator } from '@/lib/auth/rateLimiterMiddleware';
+import { loginRelatedRateLimitParams, rateLimiterMiddlewareGenerator } from '@/lib/auth/rateLimiterMiddleware';
 
 const authenticate = (method: string, req: NextApiRequest, res: NextApiResponse): Promise<UserWithId> =>
   new Promise((resolve, reject) => {
@@ -23,15 +23,9 @@ passport.use(localStrategy);
 
 export default nextConnect<NextApiRequest, NextApiResponse>()
   .use(passport.initialize())
-  .use(
-    rateLimiterMiddlewareGenerator({
-      limit: 5,
-      windowMs: 60 * 1000 * 30, // 30 minutes
-    })
-  )
+  .use(rateLimiterMiddlewareGenerator(loginRelatedRateLimitParams))
   .post(async (req, res) => {
     try {
-      console.log('Login API working...');
       const user = await authenticate('local', req, res);
 
       const session: SessionData = {

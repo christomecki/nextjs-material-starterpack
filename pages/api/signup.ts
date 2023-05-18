@@ -3,9 +3,9 @@ import { createUser } from '@/lib/auth/user';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import { sendVerificationEmail } from '@/lib/auth/emailVerification';
 import { isPasswordValid } from '@/lib/auth/passwordValidaton';
-import { rateLimiterMiddlewareGenerator } from '@/lib/auth/rateLimiterMiddleware';
+import { loginRelatedRateLimitParams, rateLimiterMiddlewareGenerator } from '@/lib/auth/rateLimiterMiddleware';
 
-const rateLimiterMiddleware = rateLimiterMiddlewareGenerator();
+const rateLimiterMiddleware = rateLimiterMiddlewareGenerator(loginRelatedRateLimitParams);
 
 export default async function signup(req: NextApiRequest, res: NextApiResponse) {
   await rateLimiterMiddleware(req, res, async () => {

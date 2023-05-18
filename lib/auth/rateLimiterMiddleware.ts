@@ -17,6 +17,16 @@ export type RateLimiterParams = {
   delayMs?: number;
 };
 
+export const standardRateLimitParams: RateLimiterParams = {
+  limit: 10,
+  windowMs: 60 * 1000, // 1 minute
+};
+
+export const loginRelatedRateLimitParams: RateLimiterParams = {
+  limit: 5,
+  windowMs: 60 * 1000 * 30, // 30 minutes
+};
+
 export const getRateLimitMiddlewares = ({
   limit = 10,
   windowMs = 60 * 1000 * 5,
