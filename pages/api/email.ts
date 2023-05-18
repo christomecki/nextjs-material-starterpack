@@ -1,6 +1,6 @@
 import { verifyToken } from '@/lib/auth/emailVerification';
 import { rateLimiterMiddlewareGenerator, standardRateLimitParams } from '@/lib/auth/rateLimiterMiddleware';
-import { findUserById, updateUser } from '@/lib/auth/user';
+import { findUserById, confirmEmail } from '@/lib/auth/user';
 import { feedbackUrlParam } from '@/lib/feedback';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -28,9 +28,7 @@ export default async function email(req: NextApiRequest, res: NextApiResponse) {
         return;
       }
 
-      await updateUser(user._id, {
-        chain: payload.chainNext,
-      });
+      await confirmEmail(user, payload.chainNext);
 
       res.redirect(`/login?${feedbackUrlParam('email-verified')}`);
     } catch (error: any) {
