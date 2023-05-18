@@ -5,8 +5,8 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Container, Divider,
 import InfoBox from '@/components/profile/ProfileInfo';
 import LogoutAllSession from '@/components/profile/LogoutAllSessions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChangePasswordForm from '@/components/changePasswordForm';
-import DeleteAccount from '@/components/deleteAccount';
+import ChangePasswordForm from '@/components/ChangePasswordForm';
+import DeleteAccount from '@/components/DeleteAccount';
 import { LoginDetails } from '@/components/profile/LoginDetails';
 
 type Props = {

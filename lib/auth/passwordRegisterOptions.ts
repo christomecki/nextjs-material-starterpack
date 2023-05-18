@@ -1,4 +1,4 @@
-import passwordValidation, { isValidationValid } from '@/lib/passValidation/passwordValidaton';
+import passwordValidation, { isValidationValid } from '@/lib/auth/passwordValidaton';
 import { RegisterOptions } from 'react-hook-form';
 
 export const passwordRegisterOptions = (options: RegisterOptions = {}) => {
