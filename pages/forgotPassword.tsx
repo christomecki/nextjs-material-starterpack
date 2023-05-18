@@ -5,7 +5,7 @@ import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import { Stack, TextField, CircularProgress, Button } from '@mui/material';
 import Router from 'next/router';
 import { feedbackUrlParam } from '@/lib/feedback';
-import { FormPageWrapper } from '@/components/formPageWrapper';
+import { FormPageWrapper } from '@/components/FormPageWrapper';
 
 export default function ForgotPassword() {
   const [isLoading, setIsLoading] = React.useState(false);

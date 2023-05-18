@@ -5,8 +5,8 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Container, Divider,
 import InfoBox from '@/components/profile/ProfileInfo';
 import LogoutAllSession from '@/components/profile/LogoutAllSessions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChangePasswordForm from '@/components/changePasswordForm';
-import DeleteAccount from '@/components/deleteAccount';
+import ChangePasswordForm from '@/components/ChangePasswordForm';
+import DeleteAccount from '@/components/DeleteAccount';
 import { LoginDetails } from '@/components/profile/LoginDetails';
 
 type Props = {
@@ -19,7 +19,7 @@ export default function Profile({ user }: Props) {
   const [expanded, setExpanded] = React.useState<AccordionPanels | false>(false);
 
   return (
-    <Container sx={{ mt: 2 }}>
+    <Container sx={{ mt: 2, pb: 2 }}>
       <InfoBox user={user} />
 
       <Divider sx={{ my: 2 }} />
@@ -30,13 +30,17 @@ export default function Profile({ user }: Props) {
           </AccordionPanel>
         )}
 
-        <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="changePassword" title="Change password">
-          <ChangePasswordForm user={user} />
-        </AccordionPanel>
+        {user.emailConfirmed && (
+          <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="changePassword" title="Change password">
+            <ChangePasswordForm user={user} />
+          </AccordionPanel>
+        )}
 
-        <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="logoutAllSessions" title="Logout from all sessions">
-          <LogoutAllSession />
-        </AccordionPanel>
+        {user.emailConfirmed && (
+          <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="logoutAllSessions" title="Logout from all sessions">
+            <LogoutAllSession />
+          </AccordionPanel>
+        )}
 
         <AccordionPanel expanded={expanded} setExpanded={setExpanded} name="deleteAccount" title="Delete account">
           <DeleteAccount />

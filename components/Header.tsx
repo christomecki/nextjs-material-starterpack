@@ -5,9 +5,8 @@ import { UserDto } from '@/lib/auth/user';
 import { useCurrentTheme } from '@/lib/material/CurrentThemeProvider';
 import { useIsMobile } from '@/lib/material/useIsMobile';
 import React from 'react';
-import { AccountCircle, Dns, Home, Logout, Person2, Menu as MenuIcon } from '@mui/icons-material';
+import { AccountCircle, AccountCircleOutlined, Dns, Home, Logout, Person2, Close, Menu as MenuIcon } from '@mui/icons-material';
 import { Box, Stack } from '@mui/system';
-import logo from '@/public/next.svg';
 import logowhite from '@/public/next-white.svg';
 import Image from 'next/image';
 import NextLink from 'next/link';
@@ -46,7 +45,7 @@ export default function Header({ user }: { user: UserDto | undefined | null }) {
 
   const leftElementsContainer = (content: React.ReactNode[]) =>
     isMobile ? (
-      <Menu anchorEl={leftMenu.anchorEl} open={leftMenu.isOpen} onClick={leftMenu.close}>
+      <Menu anchorEl={leftMenu.anchorEl} open={leftMenu.isOpen} onClick={leftMenu.close} sx={{ left: '-22px', top: '6px' }}>
         {content}
       </Menu>
     ) : (
@@ -61,7 +60,7 @@ export default function Header({ user }: { user: UserDto | undefined | null }) {
     <>
       {isMobile && (
         <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={leftMenu.open} sx={{ padding: '10px', marginLeft: '5px' }}>
-          <MenuIcon />
+          {leftMenu.isOpen ? <Close /> : <MenuIcon />}
         </IconButton>
       )}
       <NextLink href="/" style={{ display: 'flex' }}>
@@ -74,9 +73,9 @@ export default function Header({ user }: { user: UserDto | undefined | null }) {
       {user ? (
         <>
           <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={rightMenu.open} sx={{ padding: '10px', marginLeft: '5px' }}>
-            <AccountCircle />
+            {rightMenu.isOpen ? <AccountCircleOutlined /> : <AccountCircle />}
           </IconButton>
-          <Menu anchorEl={rightMenu.anchorEl} open={rightMenu.isOpen} onClick={rightMenu.close}>
+          <Menu anchorEl={rightMenu.anchorEl} open={rightMenu.isOpen} onClick={rightMenu.close} sx={{ left: isMobile ? '16px' : '0px', top: '6px' }}>
             <MItem label="Profile" href="/profile" icon={<Person2 />} />
             <MItem label="Logout" href="/api/logout" icon={<Logout />} />
           </Menu>

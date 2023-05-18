@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-import passwordValidation, { PasswordValidation } from '@/lib/passValidation/passwordValidaton';
+
+import passwordValidation, { PasswordValidation } from '@/lib/auth/passwordValidaton';
 
 type PassValidatorProps = {
   password: string;
@@ -10,6 +11,7 @@ type PassValidatorProps = {
 };
 
 export default function PassValidator({ password, passwordCorrect }: PassValidatorProps) {
+
   const validation = passwordValidation(password);
   const { hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces } = validation;
 

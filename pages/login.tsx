@@ -4,7 +4,7 @@ import { GetServerSideProps } from 'next';
 import { getUserFromSession } from '@/lib/auth/user';
 import { Alert, Box, Button, CircularProgress, Link, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import { FormPageWrapper } from '@/components/formPageWrapper';
+import { FormPageWrapper } from '@/components/FormPageWrapper';
 import { useForm } from 'react-hook-form';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import { fieldRegisterWrapper } from '@/lib/material/fieldRegisterWrapper';
@@ -13,6 +13,7 @@ type FormData = {
   email: string;
   password: string;
 };
+
 
 export default function Login() {
   const [errorMsg, setErrorMsg] = useState('');
@@ -37,12 +38,18 @@ export default function Login() {
       });
       if (res.status === 200) {
         Router.push('/');
+      } else if (res.status === 429) {
+        setErrorMsg('Too many requests, try later');
+        throw new Error(await res.text());
       } else {
+        console.log("Status code: ", res.status);
         throw new Error(await res.text());
       }
     } catch (error: any) {
       console.error('An unexpected error happened occurred:', error);
-      setErrorMsg('Invalid credentials');
+      if (!errorMsg) {
+        setErrorMsg('Invalid credentials');
+      }
     }
   });
 

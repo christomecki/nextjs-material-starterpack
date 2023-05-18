@@ -6,6 +6,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { UserWithId, findUserByEmail, updateUser } from '@/lib/auth/user';
 import { wrongPasswordAlert } from '@/lib/auth/securityAlert';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
+import { loginRelatedRateLimitParams, rateLimiterMiddlewareGenerator } from '@/lib/auth/rateLimiterMiddleware';
 
 const authenticate = (method: string, req: NextApiRequest, res: NextApiResponse): Promise<UserWithId> =>
   new Promise((resolve, reject) => {
@@ -22,6 +23,7 @@ passport.use(localStrategy);
 
 export default nextConnect<NextApiRequest, NextApiResponse>()
   .use(passport.initialize())
+  .use(rateLimiterMiddlewareGenerator(loginRelatedRateLimitParams))
   .post(async (req, res) => {
     try {
       const user = await authenticate('local', req, res);
@@ -45,7 +47,6 @@ export default nextConnect<NextApiRequest, NextApiResponse>()
       } else {
         console.error(error);
       }
-
       res.status(401).send('Unauthorized');
     }
   });
