@@ -39,7 +39,11 @@ Here are a few commands you should now be able to run JEST tests:
 
 Here are a few commands you should now be able to run Cypress tests:
 
-* Run Cypress tests once: `npm cypress:open` or `yarn cypress:open`
+* Open Cypress creator: `npm cypress:open` or `yarn cypress:open`
+* Open Cypress e2e tests: `npm e2e` or `yarn e2e`
+* Run Cypress e2e headless tests (with video): `npm e2e:headless` or `yarn e2e:headless`
+* Open Cypress component tests: `npm component` or `yarn component`
+* Run Cypress headless component tests (with video): `npm component:headless` or `yarn component:headless`
 
 ## Learn More
 
