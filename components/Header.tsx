@@ -1,7 +1,7 @@
 import { AppBar, Button, IconButton, Toolbar, Typography, Menu, MenuItem, Link, useScrollTrigger, Slide, ListItemIcon } from '@mui/material';
 import DarkMode from '@mui/icons-material/DarkMode';
 import LightMode from '@mui/icons-material/LightMode';
-import { UserDto } from '@/lib/auth/user';
+import { UserDto } from '@/lib/auth/userType';
 import { useCurrentTheme } from '@/lib/material/CurrentThemeProvider';
 import { useIsMobile } from '@/lib/material/useIsMobile';
 import React from 'react';

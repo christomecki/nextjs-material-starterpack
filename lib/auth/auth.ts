@@ -2,21 +2,8 @@ import Iron from '@hapi/iron';
 import { NextApiResponse } from 'next';
 import { MAX_AGE, setTokenCookie, getTokenCookie } from './auth-cookies';
 import { RequestWithCookies } from './types';
+import { SessionData, isSession } from './session';
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
-
-export type SessionData = {
-  userId: string;
-  chain: string;
-};
-
-export type Session = SessionData & {
-  createdAt: number;
-  maxAge: number;
-};
-
-export function isSession(session: any): session is Session {
-  return typeof session === 'object' && typeof session.createdAt === 'number' && typeof session.maxAge === 'number' && typeof session.userId === 'string';
-}
 
 export async function setLoginSession(res: NextApiResponse, session: SessionData) {
   if (TOKEN_SECRET == null) {

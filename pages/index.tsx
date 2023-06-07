@@ -1,7 +1,8 @@
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { GetServerSideProps } from 'next';
-import { getUserFromSession, UserDto } from '@/lib/auth/user';
+import { getUserFromSession } from '@/lib/auth/user';
+import { UserDto } from '@/lib/auth/userType';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { FOOTER_HEIGHT } from '@/components/Footer';

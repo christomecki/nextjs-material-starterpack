@@ -1,7 +1,7 @@
 import Footer, { FOOTER_HEIGHT } from './Footer';
 import Header from './Header';
 import Box from '@mui/material/Box';
-import { UserDto } from '@/lib/auth/user';
+import { UserDto } from '@/lib/auth/userType';
 
 export default function Layout({ children, user }: React.PropsWithChildren<{ user: UserDto | undefined | null }>) {
   return (
