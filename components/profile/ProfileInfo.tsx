@@ -1,4 +1,4 @@
-import { UserDto } from '@/lib/auth/user';
+import { UserDto } from '@/lib/auth/userType';
 import { useIsMobile } from '@/lib/material/useIsMobile';
 import { Box, Divider, Typography } from '@mui/material';
 import React from 'react';
@@ -42,7 +42,7 @@ export default function ProfileInfo({ user }: Props) {
           {user.emailConfirmed ? (
             ' Your email is confirmed'
           ) : (
-            <Box sx={{ textAlign: 'right', marginTop: { xs: 5, md: 0 } }}>
+            <Box data-cy="notconfirmed" sx={{ textAlign: 'right', marginTop: { xs: 5, md: 0 } }}>
               Your email is not confirmed.
               <br />
               Please check your email for confirmation link or ...
