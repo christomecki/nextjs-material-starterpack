@@ -1,7 +1,8 @@
 import { Box, Button } from '@mui/material';
 import React from 'react';
 
-const COOKIE_NAME = 'cookies-accepted';
+export const COOKIE_NAME = 'cookies-accepted';
+export const COOKIE_CONTENT = `${COOKIE_NAME}=true;max-age=31536000;path=/`;
 
 const locales = {
   it: {
@@ -64,7 +65,7 @@ export function CookieNotice() {
   }, []);
 
   const onAccept = () => {
-    document.cookie = `${COOKIE_NAME}=true;max-age=31536000;path=/`;
+    document.cookie = COOKIE_CONTENT;
     setShow(false);
   };
 
