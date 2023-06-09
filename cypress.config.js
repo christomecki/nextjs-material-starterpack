@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { defineConfig } = require("cypress");
+const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
   // These settings apply everywhere unless overridden
@@ -7,12 +7,6 @@ module.exports = defineConfig({
 
   viewportWidth: 1000,
   viewportHeight: 600,
-
-  // Viewport settings overridden for component tests
-  component: {
-    viewportWidth: 500,
-    viewportHeight: 500,
-  },
 
   // Command timeout overridden for E2E tests
   e2e: {
@@ -23,8 +17,8 @@ module.exports = defineConfig({
 
   component: {
     devServer: {
-      framework: "next",
-      bundler: "webpack",
+      framework: 'next',
+      bundler: 'webpack',
     },
   },
 });
