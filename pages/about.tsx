@@ -3,7 +3,8 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { UserDto, getUserFromSession } from '@/lib/auth/user';
+import { UserDto } from '@/lib/auth/userType';
+import { getUserFromSession } from '@/lib/auth/user';
 import { GetServerSideProps } from 'next/types';
 
 type Props = {

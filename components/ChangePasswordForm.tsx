@@ -1,4 +1,4 @@
-import { UserDto } from '@/lib/auth/user';
+import { UserDto } from '@/lib/auth/userType';
 import React from 'react';
 import { Alert, Button, CircularProgress, Grid, Stack, TextField } from '@mui/material';
 import Collapse from '@mui/material/Collapse';

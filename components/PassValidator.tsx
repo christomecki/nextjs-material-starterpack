@@ -3,26 +3,7 @@ import { Box, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 
-import passwordValidation, { PasswordValidation } from '@/lib/auth/passwordValidaton';
-
-type PassValidatorProps = {
-  password: string;
-  passwordCorrect: (data: boolean) => void;
-};
-
-export default function PassValidator({ password, passwordCorrect }: PassValidatorProps) {
-
-  const validation = passwordValidation(password);
-  const { hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces } = validation;
-
-  const allCorrect = hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && hasNoSpaces;
-
-  useEffect(() => {
-    passwordCorrect(allCorrect);
-  }, [allCorrect, passwordCorrect]);
-
-  return <PasswordStrengthMeter validation={validation} />;
-}
+import { PasswordValidation } from '@/lib/auth/passwordValidaton';
 
 export function PasswordStrengthMeter({ validation }: { validation: PasswordValidation }) {
   const { hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, hasNoSpaces } = validation;
@@ -45,7 +26,7 @@ function Correct({ children }: { children: React.ReactNode }) {
   return (
     <Box sx={(theme) => ({ color: theme.palette.success.main, display: 'flex', mb: '5px' })}>
       <CheckIcon sx={{ mr: '10px' }} />
-      <Box>{children}</Box>
+      <Box data-cy="correct">{children}</Box>
     </Box>
   );
 }
@@ -54,7 +35,7 @@ function Incorrect({ children }: { children: React.ReactNode }) {
   return (
     <Box sx={(theme) => ({ color: theme.palette.warning.main, display: 'flex', mb: '5px' })}>
       <ClearIcon sx={{ mr: '10px' }} />
-      <Box>{children}</Box>
+      <Box data-cy="incorrect">{children}</Box>
     </Box>
   );
 }

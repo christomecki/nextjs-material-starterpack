@@ -1,8 +1,55 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## NextJS STARTER PACK
 
-## Getting Started
+This starter pack is created as a basis for the development of further projects. It contains basic functionalities related to configuration and authentication, allowing for faster application development based on well-written code
 
-First, run the development server:
+## List of functionalities
+
+### This starter pack is a collection of:
+
+  - Mobile & desktop VERSION
+  - Auhentication based on cookies
+  - Creating account
+  - Password strength meter
+  - Verifying account by sending email
+  - Sending reset-email token to set forgotten password.
+  - Sending email, when sign-in assempt failed exist.
+  - Info about Last login and Last failed login.
+  - Profile functionalities like: Logout from all sessions, change password, delete account.
+  - Custom error pages and error boundary.
+  - Rare limiting.
+  - Tests in JEST and Cypress.
+
+## Used packages
+
+  - mui
+  - emotions
+  - express-rate-limit
+  - cookie
+  - emailjs
+  - mongodb
+  - notistack
+  - passport
+  - react-hook-form
+  - cypress
+  - jest
+
+## Database
+
+We used MongoDB to store the site's resources. The database is installed by docker.
+
+
+## Installation
+
+On the command-line or Terminal, navigate to the root of the directory which you downloaded and run:
+
+* If you have npm: `npm install`
+* If you have yarn: `yarn install`
+
+You also need to install database MongoDB. Run `docker-start.cmd`. To see the contents of the database, you can use MongoDB Compass.
+
+## Run app
+
+Run the development server:
 
 ```bash
 npm run dev
@@ -14,25 +61,19 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Running JEST tests
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Here are a few commands you should now be able to run JEST tests:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+* Run Jest tests once: `npm test` or `yarn test`
+* Run Jest in watch mode (great for TDD): `npm run test:watch` or `yarn test:watch`
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Running CYPRESS tests
 
-## Learn More
+Here are a few commands you should now be able to run Cypress tests:
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+* Open Cypress creator: `npm cypress:open` or `yarn cypress:open`
+* Open Cypress e2e tests: `npm e2e` or `yarn e2e`
+* Run Cypress e2e headless tests (with video): `npm e2e:headless` or `yarn e2e:headless`
+* Open Cypress component tests: `npm component` or `yarn component`
+* Run Cypress headless component tests (with video): `npm component:headless` or `yarn component:headless`
