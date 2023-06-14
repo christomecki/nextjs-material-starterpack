@@ -1,8 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { findUserByEmail, generateNextChain, generateSaltAndHash, updateUser, validatePassword } from '@/lib/auth/user';
+import { findUserByEmail, generateSaltAndHash, updateUser, validatePassword } from '@/lib/auth/user';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import passwordValidation, { isValidationValid } from '@/lib/auth/passwordValidaton';
-import { SessionData, setLoginSession } from '@/lib/auth/auth';
+import { setLoginSession } from '@/lib/auth/auth';
+import { SessionData } from '@/lib/auth/session';
+import { generateNextChain } from '@/lib/auth/chain';
 import { rateLimiterMiddlewareGenerator, standardRateLimitParams } from '@/lib/auth/rateLimiterMiddleware';
 
 const rateLimiterMiddleware = rateLimiterMiddlewareGenerator(standardRateLimitParams);

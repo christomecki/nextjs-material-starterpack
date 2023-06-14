@@ -1,5 +1,6 @@
 import { sendResetPasswordEmail } from '@/lib/auth/resetPassword';
-import { STARTING_CHAIN, findUserByEmail, isUserConfirmedEmail } from '@/lib/auth/user';
+import { findUserByEmail } from '@/lib/auth/user';
+import { isUserConfirmedEmail } from '@/lib/auth/userType';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { loginRelatedRateLimitParams, rateLimiterMiddlewareGenerator } from '@/lib/auth/rateLimiterMiddleware';

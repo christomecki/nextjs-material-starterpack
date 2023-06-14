@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { removeTokenCookie } from '@/lib/auth/auth-cookies';
-import { generateNextChain, getUserFromSession_BackendOnly, updateUser } from '@/lib/auth/user';
+import { getUserFromSession_BackendOnly, updateUser } from '@/lib/auth/user';
+import { generateNextChain } from '@/lib/auth/chain';
 import { rateLimiterMiddlewareGenerator, standardRateLimitParams } from '@/lib/auth/rateLimiterMiddleware';
 
 const rateLimiterMiddleware = rateLimiterMiddlewareGenerator(standardRateLimitParams);
