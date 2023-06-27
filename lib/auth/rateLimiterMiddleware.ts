@@ -1,7 +1,7 @@
 import rateLimit from 'express-rate-limit';
 import slowDown from 'express-slow-down';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { NextHandler } from 'next-connect';
+import nextConnect, { NextHandler } from 'next-connect';
 
 const applyMiddleware = (middleware: any) => (request: NextApiRequest, response: NextApiResponse) =>
   new Promise((resolve, reject) => {
@@ -17,22 +17,10 @@ export type RateLimiterParams = {
   delayMs?: number;
 };
 
-export const standardRateLimitParams: RateLimiterParams = {
-  limit: 10,
-  windowMs: 60 * 1000, // 1 minute
-};
-
-export const loginRelatedRateLimitParams: RateLimiterParams = {
-  limit: 5,
-  windowMs: 60 * 1000 * 30, // 30 minutes
-};
-
-export const getRateLimitMiddlewares = ({
-  limit = 10,
-  windowMs = 60 * 1000 * 5,
-  delayAfter = Math.round(limit / 2),
-  delayMs = 500,
-}: RateLimiterParams = {}) => [slowDown({ keyGenerator: getIP, windowMs, delayAfter, delayMs }), rateLimit({ keyGenerator: getIP, windowMs, max: limit })];
+export const getRateLimitMiddlewares = ({ limit = 10, windowMs = 60 * 1000, delayAfter = Math.round(limit / 2), delayMs = 500 }: RateLimiterParams = {}) => [
+  slowDown({ keyGenerator: getIP, windowMs, delayAfter, delayMs }),
+  rateLimit({ keyGenerator: getIP, windowMs, max: limit }),
+];
 
 export const rateLimiterMiddlewareGenerator = (params?: RateLimiterParams) => {
   const middlewares = getRateLimitMiddlewares(params);
@@ -42,5 +30,17 @@ export const rateLimiterMiddlewareGenerator = (params?: RateLimiterParams) => {
   };
 };
 
-const defaultRateLimiterMiddleware = rateLimiterMiddlewareGenerator();
-export default defaultRateLimiterMiddleware;
+export const loginRelatedRateLimiterMiddleware = rateLimiterMiddlewareGenerator({
+  limit: 5,
+  windowMs: 60 * 1000 * 30, // 30 minutes
+});
+
+export const defaultRateLimiterMiddleware = rateLimiterMiddlewareGenerator();
+
+const rateLimiters = {
+  default: defaultRateLimiterMiddleware,
+  'login-related': loginRelatedRateLimiterMiddleware,
+};
+
+export const withRateLimiter = (rateLimiterKey: keyof typeof rateLimiters = 'default') =>
+  nextConnect<NextApiRequest, NextApiResponse>().use(rateLimiters[rateLimiterKey]);
