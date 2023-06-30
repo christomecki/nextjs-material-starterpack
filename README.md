@@ -22,6 +22,8 @@ This starter pack was created as a foundation for developing future projects. It
 - Rare limiting
 - Tests in JEST and Cypress.
 
+> For a complete list of packages, refer to the package.json file.
+
 ## Database
 
 We used MongoDB to store the site's resources.
@@ -67,3 +69,7 @@ Here are a few commands you should now be able to run Cypress tests:
 - Run Cypress e2e headless tests (with video): `npm e2e:headless` or `yarn e2e:headless`
 - Open Cypress component tests: `npm component` or `yarn component`
 - Run Cypress headless component tests (with video): `npm component:headless` or `yarn component:headless`
+
+## Build & deploy app
+
+Because of this is a `Next.js` app, follow official documentation: [deployment](https://nextjs.org/docs/pages/building-your-application/deploying).
