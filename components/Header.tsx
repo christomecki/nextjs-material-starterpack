@@ -63,8 +63,8 @@ export default function Header({ user }: { user: UserDto | undefined | null }) {
           {leftMenu.isOpen ? <Close /> : <MenuIcon />}
         </IconButton>
       )}
-      <NextLink href="/" style={{ display: 'flex' }}>
-        <Image src={logowhite} alt="LOGO" height={isMobile ? 15 : 30} />
+      <NextLink href="/" style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+        <Image src={logowhite} alt="LOGO" height={isMobile ? 20 : 30} />
       </NextLink>
       <Box sx={{ mr: 2 }}></Box>
       {leftElementsContainer(menuItems.map((items) => <LeftElement key={items.label} href={items.linkTo} label={items.label} icon={items.icon} />))}
