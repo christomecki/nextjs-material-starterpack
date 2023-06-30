@@ -11,10 +11,6 @@ type Props = {
   user: UserDto | null;
 };
 
-const scrollDown = () => {
-  window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-};
-
 export default function Home({ user }: Props) {
   return (
     <>
@@ -40,14 +36,18 @@ export default function Home({ user }: Props) {
             gap: 2,
           }}
         >
-          <Typography width="60%" variant="h3" component="h1" color="white" gutterBottom>
-            Welcome on our website!
+          <Typography variant="h3" component="h1" color="white" gutterBottom>
+            Welcome to our website!
           </Typography>
         </Box>
         <Typography width="40%" variant="subtitle1" color="white" gutterBottom>
           Est fugiat dolor cupidatat nisi ipsum commodo commodo eu ad. Et proident duis laboris sint excepteur.
         </Typography>
-        <Button size="large" sx={{ justifySelf: 'flex-end', color: ' white', fontSize: '2rem', borderRadius: '50px' }} onClick={() => scrollDown()}>
+        <Button
+          size="large"
+          sx={(theme) => ({ justifySelf: 'flex-end', fontSize: '2rem', color: 'white', '&:hover': { color: theme.palette.primary.dark } })}
+          onClick={scrollDown}
+        >
           Learn more
         </Button>
       </Box>
@@ -60,24 +60,18 @@ export default function Home({ user }: Props) {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          minHeight: `calc(150vh - ${FOOTER_HEIGHT}px) `,
+          minHeight: `calc(100vh) `,
         }}
       >
         <Typography>CONTENT</Typography>
       </Box>
-
-      <style jsx>{`
-        li {
-          margin-bottom: 0.5rem;
-        }
-        pre {
-          white-space: pre-wrap;
-          word-wrap: break-word;
-        }
-      `}</style>
     </>
   );
 }
+
+const scrollDown = () => {
+  window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+};
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req }) => {
   const user = await getUserFromSession(req);
