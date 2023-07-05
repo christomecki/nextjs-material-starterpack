@@ -1,4 +1,4 @@
-import { UserWithId } from './user';
+import { UserWithId } from './userType';
 import smtp from '../smtp';
 import { emailTokenGenerator } from './emailToken';
 

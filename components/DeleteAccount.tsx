@@ -11,7 +11,7 @@ export default function DeleteAccount() {
     e.preventDefault();
     console.log('delete account');
     try {
-      const res = await fetch('api/deleteAccount', {
+      const res = await fetch('/api/deleteAccount', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

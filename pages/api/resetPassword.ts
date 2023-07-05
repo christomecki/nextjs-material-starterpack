@@ -1,10 +1,11 @@
+import { withRateLimiter } from '@/lib/auth/rateLimiterMiddleware';
 import { verifyToken } from '@/lib/auth/resetPassword';
 import { findUserById, generateSaltAndHash, updateUser } from '@/lib/auth/user';
 import { feedbackUrlParam } from '@/lib/feedback';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 //if method is GET, redirect to a form. if method is POST, update the password
-export default async function resetPassword(req: NextApiRequest, res: NextApiResponse) {
+export default withRateLimiter().all(async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.query;
 
   if (typeof token !== 'string') {
@@ -46,4 +47,4 @@ export default async function resetPassword(req: NextApiRequest, res: NextApiRes
     console.error(error);
     res.redirect(`/?${feedbackUrlParam('unexpected-error')}`);
   }
-}
+});

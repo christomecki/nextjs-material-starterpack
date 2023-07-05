@@ -1,6 +1,7 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
-import { getUserFromSession, UserDto } from '@/lib/auth/user';
+import { getUserFromSession } from '@/lib/auth/user';
+import { UserDto } from '@/lib/auth/userType';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Container, Divider, Typography } from '@mui/material';
 import InfoBox from '@/components/profile/ProfileInfo';
 import LogoutAllSession from '@/components/profile/LogoutAllSessions';

@@ -1,8 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## NextJS STARTER PACK
 
-## Getting Started
+This starter pack was created as a foundation for developing future projects. It contains boilerplate code for basic functionalities related to UI, configuration, and authentication, thus enabling faster application development.
 
-First, run the development server:
+## This starter pack includes:
+
+- Mobile & desktop UI
+- Lignt & Dark theme
+- MongoDB connection
+- Auhentication based on cookies and [iron session](https://github.com/hapijs/iron)
+- Account creation
+- Password strength meter
+- Verifying account by sending email
+- Sending reset-email tokens for forgotten passwords
+- Alert emails for failed sign-in attempts
+- Information about last successful/failed sign-in attempts
+- User functionalities such as:
+  - Logout from all sessions
+  - Password change
+  - Account deletion
+- Custom error pages and error boundary
+- Rare limiting
+- Tests in JEST and Cypress.
+
+> For a complete list of packages, refer to the package.json file.
+
+## Database
+
+We used MongoDB to store the site's resources.
+
+## Installation
+
+On the command-line or Terminal, navigate to the root of the directory which you downloaded and run:
+
+- If you have npm: `npm install`
+- If you have yarn: `yarn install`
+
+If you want to run MongoDB run `docker-start.cmd`. To see the contents of the database, you can use MongoDB Compass.
+
+You need to copy the `.env.example` file, rename it as `.env`, and then configure the variables within it.
+
+## Run app
+
+Run the development server:
 
 ```bash
 npm run dev
@@ -14,25 +53,23 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Running JEST tests
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Here are a few commands you should now be able to run JEST tests:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- Run Jest tests once: `npm test` or `yarn test`
+- Run Jest in watch mode (great for TDD): `npm run test:watch` or `yarn test:watch`
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Running CYPRESS tests
 
-## Learn More
+Here are a few commands you should now be able to run Cypress tests:
 
-To learn more about Next.js, take a look at the following resources:
+- Open Cypress creator: `npm cypress:open` or `yarn cypress:open`
+- Open Cypress e2e tests: `npm e2e` or `yarn e2e`
+- Run Cypress e2e headless tests (with video): `npm e2e:headless` or `yarn e2e:headless`
+- Open Cypress component tests: `npm component` or `yarn component`
+- Run Cypress headless component tests (with video): `npm component:headless` or `yarn component:headless`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Build & deploy app
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Because of this is a `Next.js` app, follow official documentation: [deployment](https://nextjs.org/docs/pages/building-your-application/deploying).

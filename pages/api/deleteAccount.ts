@@ -1,13 +1,9 @@
 import { removeTokenCookie } from '@/lib/auth/auth-cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { deleteUserAccount, getUserFromSession_BackendOnly, validatePassword } from '@/lib/auth/user';
+import { withRateLimiter } from '@/lib/auth/rateLimiterMiddleware';
 
-export default async function deleteAccount(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    res.status(405).json({ message: 'Method not allowed' });
-    return;
-  }
-
+export default withRateLimiter().post(async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await getUserFromSession_BackendOnly(req);
   if (!user) {
     res.status(401).json({ message: 'Unauthorized' });
@@ -28,4 +24,4 @@ export default async function deleteAccount(req: NextApiRequest, res: NextApiRes
 
   removeTokenCookie(res);
   res.end();
-}
+});

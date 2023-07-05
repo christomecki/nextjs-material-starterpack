@@ -1,11 +1,14 @@
 import passport from 'passport';
 import nextConnect from 'next-connect';
 import { InvalidEmailPasswordCombination, localStrategy } from '@/lib/auth/password-local';
-import { SessionData, setLoginSession } from '@/lib/auth/auth';
+import { setLoginSession } from '@/lib/auth/auth';
+import { SessionData } from '@/lib/auth/session';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { UserWithId, findUserByEmail, updateUser } from '@/lib/auth/user';
+import { findUserByEmail, updateUser } from '@/lib/auth/user';
+import { UserWithId } from '@/lib/auth/userType';
 import { wrongPasswordAlert } from '@/lib/auth/securityAlert';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
+import { loginRelatedRateLimiterMiddleware } from '@/lib/auth/rateLimiterMiddleware';
 
 const authenticate = (method: string, req: NextApiRequest, res: NextApiResponse): Promise<UserWithId> =>
   new Promise((resolve, reject) => {
@@ -22,6 +25,7 @@ passport.use(localStrategy);
 
 export default nextConnect<NextApiRequest, NextApiResponse>()
   .use(passport.initialize())
+  .use(loginRelatedRateLimiterMiddleware)
   .post(async (req, res) => {
     try {
       const user = await authenticate('local', req, res);
@@ -45,7 +49,6 @@ export default nextConnect<NextApiRequest, NextApiResponse>()
       } else {
         console.error(error);
       }
-
       res.status(401).send('Unauthorized');
     }
   });

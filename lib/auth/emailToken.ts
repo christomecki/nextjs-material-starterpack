@@ -1,5 +1,6 @@
 import Iron from '@hapi/iron';
-import { UserWithId, generateNextChain } from './user';
+import { UserWithId } from './userType';
+import { generateNextChain } from './chain';
 
 export type EmailVerificationPayload = {
   userId: string;
@@ -11,6 +12,7 @@ export type EmailVerificationPayload = {
 
 export function isEmailVerificationPayload(payload: any): payload is EmailVerificationPayload {
   return (
+    payload != null &&
     typeof payload === 'object' &&
     typeof payload.createdAt === 'number' &&
     typeof payload.maxAge === 'number' &&

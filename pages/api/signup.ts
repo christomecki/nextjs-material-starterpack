@@ -3,8 +3,9 @@ import { createUser } from '@/lib/auth/user';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import { sendVerificationEmail } from '@/lib/auth/emailVerification';
 import { isPasswordValid } from '@/lib/auth/passwordValidaton';
+import { withRateLimiter } from '@/lib/auth/rateLimiterMiddleware';
 
-export default async function signup(req: NextApiRequest, res: NextApiResponse) {
+export default withRateLimiter('login-related').post(async (req: NextApiRequest, res: NextApiResponse) => {
   const returnError = (error: any) => {
     console.error(error);
     res.status(500).end(error.message);
@@ -28,4 +29,4 @@ export default async function signup(req: NextApiRequest, res: NextApiResponse) 
   } catch (error: any) {
     returnError(error);
   }
-}
+});

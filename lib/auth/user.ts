@@ -1,45 +1,11 @@
 import crypto from 'crypto';
 import { database } from '../mongodb';
-import { pick } from 'lodash';
-import { Session, getLoginSession } from './auth';
+import { getLoginSession } from './auth';
+import { Session } from './session';
 import { RequestWithCookies } from './types';
-import { ObjectId, WithId } from 'mongodb';
-import { v4 as uuidv4 } from 'uuid';
-
-export type User = {
-  createdAt: number;
-  email: string;
-  hash: string;
-  salt: string;
-  chain: string;
-  lastLogin?: {
-    timestamp: string;
-    ip: string;
-  };
-  lastFailedLogin?: {
-    timestamp: string;
-    ip: string;
-    userAgent: string;
-  };
-};
-
-export type UserWithId = WithId<User>;
-
-export const STARTING_CHAIN = '0';
-
-export function isUserConfirmedEmail(user: User) {
-  return user.chain !== STARTING_CHAIN;
-}
-
-export function userDto(user: User) {
-  const safeFields = pick(user, ['createdAt', 'email', 'lastLogin', 'lastFailedLogin']);
-  return {
-    ...safeFields,
-    emailConfirmed: isUserConfirmedEmail(user),
-  };
-}
-
-export type UserDto = ReturnType<typeof userDto>;
+import { ObjectId } from 'mongodb';
+import { STARTING_CHAIN } from './chain';
+import { User, UserWithId, userDto } from './userType';
 
 const userCollection = database.collection<User>('user');
 
@@ -133,8 +99,4 @@ export async function getUserFromSession(req: RequestWithCookies) {
   } catch (error) {
     return null;
   }
-}
-
-export function generateNextChain() {
-  return uuidv4();
 }

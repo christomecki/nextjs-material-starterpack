@@ -1,14 +1,11 @@
 import { sendResetPasswordEmail } from '@/lib/auth/resetPassword';
-import { STARTING_CHAIN, findUserByEmail, isUserConfirmedEmail } from '@/lib/auth/user';
+import { findUserByEmail } from '@/lib/auth/user';
+import { isUserConfirmedEmail } from '@/lib/auth/userType';
 import { isValidEmailAddress } from '@/lib/auth/isValidEmailAddress';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { withRateLimiter } from '@/lib/auth/rateLimiterMiddleware';
 
-export default async function forgotPassword(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    res.status(405).end('Method Not Allowed');
-    return;
-  }
-
+export default withRateLimiter().post(async (req: NextApiRequest, res: NextApiResponse) => {
   const email = req.body.email;
   if (email == null || typeof email !== 'string' || !isValidEmailAddress(email)) {
     res.status(400).end('Bad Request');
@@ -24,4 +21,4 @@ export default async function forgotPassword(req: NextApiRequest, res: NextApiRe
   sendResetPasswordEmail(user); //no wait
 
   res.status(200).end('OK');
-}
+});

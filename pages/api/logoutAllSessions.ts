@@ -1,8 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { removeTokenCookie } from '@/lib/auth/auth-cookies';
-import { generateNextChain, getUserFromSession_BackendOnly, updateUser } from '@/lib/auth/user';
+import { getUserFromSession_BackendOnly, updateUser } from '@/lib/auth/user';
+import { generateNextChain } from '@/lib/auth/chain';
+import { withRateLimiter } from '@/lib/auth/rateLimiterMiddleware';
 
-export default async function logoutAllSessions(req: NextApiRequest, res: NextApiResponse) {
+export default withRateLimiter().get(async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await getUserFromSession_BackendOnly(req);
   if (user == null) {
     res.status(401).json({ message: 'Unauthorized' });
@@ -16,4 +18,4 @@ export default async function logoutAllSessions(req: NextApiRequest, res: NextAp
   removeTokenCookie(res);
   res.writeHead(302, { Location: '/' });
   res.end();
-}
+});

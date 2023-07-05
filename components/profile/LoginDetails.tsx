@@ -1,4 +1,4 @@
-import { UserDto } from '@/lib/auth/user';
+import { UserDto } from '@/lib/auth/userType';
 import { useIsMobile } from '@/lib/material/useIsMobile';
 import { Box, Divider, Typography } from '@mui/material';
 import React from 'react';

@@ -1,9 +1,10 @@
 import { verifyToken } from '@/lib/auth/emailVerification';
-import { confirmEmail, findUserById } from '@/lib/auth/user';
+import { withRateLimiter } from '@/lib/auth/rateLimiterMiddleware';
+import { findUserById, confirmEmail } from '@/lib/auth/user';
 import { feedbackUrlParam } from '@/lib/feedback';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function email(req: NextApiRequest, res: NextApiResponse) {
+export default withRateLimiter().get(async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.query;
 
   if (typeof token !== 'string') {
@@ -31,4 +32,4 @@ export default async function email(req: NextApiRequest, res: NextApiResponse) {
     console.error(error);
     res.redirect(`/?${feedbackUrlParam('unexpected-error')}`);
   }
-}
+});
