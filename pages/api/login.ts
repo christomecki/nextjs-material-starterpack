@@ -13,7 +13,7 @@ import { loginRelatedRateLimiterMiddleware } from '@/lib/auth/rateLimiterMiddlew
 const authenticate = (method: string, req: NextApiRequest, res: NextApiResponse): Promise<UserWithId> =>
   new Promise((resolve, reject) => {
     passport.authenticate(method, { session: false }, (error: any, user: UserWithId) => {
-      if (error) {
+      if (error || !user) {
         reject(error as any);
       } else {
         resolve(user);
